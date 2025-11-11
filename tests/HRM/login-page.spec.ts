@@ -116,8 +116,8 @@ test.describe('HRML Login Page - Negative case', () => {
   test('TC_LOGIN_08 - Mật khẩu quá ngắn (dưới 6 ký tự)', async ({ page }) => {
     // Arrange
     await page.goto('https://hrm.anhtester.com/erp/login');
-    const title = await page.locator('h4').innerText();
-    expect(title).toBe('Welcome to HRM | Anh Tester Demo');
+    const title = page.locator('h4');
+    await expect(title).toHaveText('Welcome to HRM | Anh Tester Demo');
 
     //Actions
     await page.locator('#iusername').fill('admin_example');
@@ -153,10 +153,10 @@ test.describe('HRML Login Page - UI', () => {
     await expect(page.locator('#iusername')).toHaveAttribute('placeholder', 'Your Username');
     await expect(page.locator('#ipassword')).toHaveAttribute('placeholder', 'Enter Password');
     // là page.locator().getAttribute('tên của attribute')
-    const userNamePlaceHolder = await page.locator('#iusername').getAttribute('placeholder');
-    expect(userNamePlaceHolder).toBe('Your Username');
+    const userNamePlaceHolder = page.locator('#iusername');
+    await expect(userNamePlaceHolder).toHaveAttribute('placeholder', 'Your Username');
 
-    const passwordPlaceHolder = await page.locator('#ipassword').getAttribute('placeholder');
-    expect(passwordPlaceHolder).toBe('Enter Password');
+    const passwordPlaceHolder = page.locator('#ipassword');
+    await expect(passwordPlaceHolder).toHaveAttribute('placeholder', 'Enter Password');
   });
 });
