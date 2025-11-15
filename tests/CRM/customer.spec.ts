@@ -113,11 +113,6 @@ test.describe('CRM Customer Page - Possitive case', () => {
     const currencyContainer = page.locator('div.form-group', { hasText: 'Currency' });
     await currencyContainer.locator('button[data-id="default_currency"]').click();
 
-    await page
-      .locator('a[role="option"]')
-      .filter({ has: page.locator('span.text', { hasText: information.currency }) })
-      .click();
-
     await page.locator('#default_language').selectOption(information.language);
 
     //a[@role='option'][.//span[contains(@class, 'text') and contains(., 'USD') ]]

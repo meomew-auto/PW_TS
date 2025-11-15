@@ -1,0 +1,25 @@
+thằng POM
+sẽ đảm bảo cái việc là tách biệt trách nhiệm - > trách nhiệm đơn lẻ 
+- phân chia thành 2 thành phần chính
+1. kịch bản test(test script):  đại diện cho business logic
+2. đối tượng trang(page object): đại diện cho technical implenmentation -> tương tác với UI như thế nào
+-> chia thành các class -> mỗi 1 class địa diện cho 1 trang 
+
+--> giải quyết đc 3 cái thách thức lớn nhất trong auto
+1. tính dễ bảo trì: 
+- nó sẽ tập trung tất cả các selector và phương thức của trang custom  bao gồm ví dụ là: company locator
+2. Tính tái sử dụng:
+- tạo ra các phương thức (actions) địa diện cho hành vi nghiệp vụ (business behavior )
+- > ví dụ tao có loginPage.login('user', 'password')
+3. Tính dễ đọc ; 
+
+Để giải quyết vấn đề DRY (don't repeat yourself) => base page( trang cơ sở) 
+basepage -> là 1 lớp cha trừu tượng mà tất cả các page object khác (loginpage), sẽ kế thừa
+=> đóng vai trò như 1 hd giao diện chung. định nghĩa tập hợp các yếu tố và hành động
+mà mọi trang trong ứng dụng dều phải có quyền truy cập
+
+ví dụ: hệ thống nhân viên và công cụ chung
+-> mọi nhân viên đều cần sử dụng chung 1 số công cụ của công ty , ví dụ như là email service
+
+
+
