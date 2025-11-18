@@ -93,3 +93,74 @@ const eventMap = {
 const logEvent = createLogger(eventMap);
 
 logEvent('BTN_CLICK_SIGUP');
+
+// kế thừa - kết hợp/thành phần (inheritance, composition)
+
+// kế thừa là mối quan hệ  là một
+// ví dụ con mèo là 1 động vật, giám đốc là 1 nhân viên
+// con cái thừa hưởng gen của bm
+
+// kết hợp ;
+
+// có xe hơi có 1 cái động cơ (chứ ko phải xe hơi là động cơ)
+// tư duy: lắp ráp lego. tạo 1 cái vật thể lớn từ các mạn ghép nhỏ
+
+//class cha
+class SmartDevcie {
+  connectWifi() {
+    console.log('connected wifi');
+  }
+  playMusicAndLight() {
+    console.log('vua hat vua chieu sang');
+  }
+}
+
+class SmartLight extends SmartDevcie {
+  turnOn() {
+    console.log('Light on');
+  }
+}
+
+class SmartSpeaker extends SmartDevcie {
+  playMusic() {
+    console.log('Music on');
+  }
+}
+
+// neu bh lla sep yeu cau lam thiet bi den biet hat
+// class SigingLight extends SmartDevcie {}
+
+class WifiModule {
+  connect() {
+    console.log('wifi da connect');
+  }
+}
+
+class LightMoudle {
+  on() {
+    console.log('bat');
+  }
+  off() {
+    console.log('tat');
+  }
+}
+
+class SpeakerModule {
+  play(song: string) {
+    console.log(`dang hat ${song}`);
+  }
+}
+
+class SigingLight {
+  private wifi = new WifiModule();
+  private light = new LightMoudle();
+  private speaker = new SpeakerModule();
+
+  partyTime() {
+    this.wifi.connect();
+    this.light.on();
+    this.speaker.play('OLLAA');
+  }
+}
+const myPartyLight = new SigingLight();
+myPartyLight.partyTime();
