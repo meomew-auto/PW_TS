@@ -12,18 +12,18 @@ export class CRMLoginPage extends BasePage {
   }
 
   async expectOnPage(): Promise<void> {
-    await expect(this.emailInput).toBeVisible();
     await expect(this.passwordInput).toBeVisible();
     await expect(this.h1Text).toContainText('Login');
     await expect(this.page).toHaveURL(/admin\/authentication/);
   }
   async login(email: string, password: string) {
-    this.logFill(this.emailInput);
-    await this.emailInput.fill(email);
-    this.logFill(this.passwordInput);
+    await this.fillWithLog(this.emailInput, email);
+    await this.fillWithLog(this.passwordInput, password, {
+      isSensitive: true,
+      fillOptions: { timeout: 10000 },
+    });
     await this.passwordInput.fill(password);
-    this.logClick(this.loginButton);
-    await this.loginButton.click();
+    await this.clickWithLog(this.loginButton, { timeout: 10000 });
     //1 số FW cũ sẽ dùng cách chuyển trang như thế này,
     //được gọi alf page chaining
     // if  /

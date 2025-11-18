@@ -36,3 +36,5 @@ myCar.move();
 
 myTruck.startEngine();
 myTruck.move();
+
+// trong TS có 1 hàm gọi là parameters<T>
