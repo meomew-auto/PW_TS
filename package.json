@@ -8,7 +8,11 @@
     "lint": "eslint tests/**/*.ts",
     "lint:fix": "eslint tests/**/*.ts --fix",
     "format": "prettier --write tests/**/*.ts",
-    "format:check": "prettier --check tests/**/*.ts"
+    "format:check": "prettier --check tests/**/*.ts",
+    "test": "playwright test",
+    "test:ui": "playwright test --ui",
+    "test:headed": "playwright test --headed",
+    "run:ts": "tsx"
   },
   "keywords": [],
   "author": "",
@@ -21,7 +25,8 @@
     "@typescript-eslint/parser": "^8.46.2",
     "eslint-config-prettier": "^10.1.8",
     "eslint-plugin-prettier": "^5.5.4",
-    "prettier": "^3.6.2"
+    "prettier": "^3.6.2",
+    "tsx": "^4.20.6"
   },
   "dependencies": {
     "@faker-js/faker": "^10.1.0",

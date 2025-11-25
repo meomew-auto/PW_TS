@@ -12,6 +12,8 @@ export class CRMDashboardPage extends BasePage {
     dashboardLink: (page: Page) => page.getByRole('link', { name: 'Dashboard' }),
   } as const;
 
+  //hàm tạoh nhà máy
+
   public element = this.createLocatorGetter(this.pageLocators);
 
   async expectOnPage(): Promise<void> {

@@ -41,6 +41,8 @@ interface User {
 }
 
 type UserKeys = keyof User;
+
+const idTest: UserKeys = 'id';
 // tương đương với
 // type UserKeys = 'id' | 'name' | 'email'
 
@@ -56,6 +58,12 @@ const Colors = {
 
 //viết 1 cái hàm chỉ nhận đúng tên màu có trong object
 type ColorsType = typeof Colors;
+
+const green: ColorsType = {
+  Red: '#FF0000',
+  Green: '#00FF00',
+  Blue: '#0000FF',
+};
 // bước 1: typeof Colors => ra cái type là {Red: ''....}
 // bước 2: keyOf (b1) =? keyoF ColorType => union 'Red' | 'Green' | 'Blue'
 
