@@ -19,6 +19,19 @@ function createRandomUser() {
   };
 }
 
+async function getCompanyNames(page: Page): Promise<string[]> {
+  const rows = page.locator('tbody tr');
+  const count = await rows.count();
+  const companies: string[] = [];
+  for (let i = 0; i < count; i++) {
+    //tôi nhớ 1 cách máy móc là company ở vị thứ 3
+    const cell = rows.nth(i).locator('td:nth-child(3)');
+    const text = await cell.textContent();
+    companies.push((text || '').trim());
+  }
+  return companies;
+}
+
 async function loginAndNaviagteToNewCustomer(page: Page, tabName: string) {
   //thực hiện hành động login -> navigate tới customer
 
@@ -39,6 +52,8 @@ async function loginAndNaviagteToNewCustomer(page: Page, tabName: string) {
   //#menu a[href*='Customer']
   await expect(page.getByRole('link', { name: `${tabName}` })).toBeVisible();
   await page.getByRole('link', { name: `${tabName}` }).click();
+  const companies = await getCompanyNames(page);
+
   await page.getByRole('link', { name: 'New Customer' }).click();
 
   //   await page.locator(`//span[normalize-space(.) = '${tabName}']//parent::a`).click();

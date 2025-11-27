@@ -72,6 +72,8 @@ const richKid = {
   money: 100000,
 };
 
+richKid.id;
+
 checkIn(richKid);
 
 const nguoiQuenVi = {
