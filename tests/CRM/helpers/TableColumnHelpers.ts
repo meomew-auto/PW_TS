@@ -12,7 +12,7 @@ export type ColumnInfo = {
   text: string;
 };
 
-export type ColoumnMap = Record<string, ColumnInfo>;
+export type ColumnMap = Record<string, ColumnInfo>;
 
 function toCamelCase(text: string): string {
   const words = text.toLowerCase().split(' ');
@@ -33,9 +33,9 @@ function cleanHeaderText(text: string): string {
   return words.join(' ');
 }
 
-export async function createColumnMap(headers: Locator): Promise<ColoumnMap> {
+export async function createColumnMap(headers: Locator): Promise<ColumnMap> {
   const count = await headers.count();
-  const map: ColoumnMap = {};
+  const map: ColumnMap = {};
 
   for (let index = 0; index < count; index++) {
     const headerLocator = headers.nth(index);
@@ -60,4 +60,63 @@ export async function createColumnMap(headers: Locator): Promise<ColoumnMap> {
     }
   }
   return map;
+}
+export async function getColumnInfoSimple(
+  headersLocator: Locator,
+  columnKey: string,
+  coloumnMapCache?: ColumnMap | null
+): Promise<{ info: ColumnInfo; columnMap: ColumnMap }> {
+  //B1: Thử dùng cache nếu có
+  let map: ColumnMap | null = coloumnMapCache || null;
+  if (!map) {
+    map = await createColumnMap(headersLocator);
+  }
+  //B2: Tìm column trong map
+  let info = map[columnKey];
+
+  //B3: Nếu ko tìm thấy. tạo lại map từ DOM
+  // retry strategy
+  if (!info) {
+    map = await createColumnMap(headersLocator);
+    info = map[columnKey];
+  }
+  if (!info) {
+    throw new Error(`Column ${columnKey} không tìm thấy`);
+  }
+  return { info, columnMap: map };
+}
+
+export type ColumnTextCleaner = (cell: Locator) => Promise<string>;
+
+export async function getCellTextSimple(
+  cell: Locator,
+  columnKey: string,
+  columnCleaner?: Record<string, ColumnTextCleaner>
+): Promise<string> {
+  ///B1: Kiểm tra xem custom cleaner cho column key có hay ko
+
+  const cleaner = columnCleaner?.[columnKey];
+  if (cleaner) {
+    return cleaner(cell);
+  }
+  const text = await cell.textContent();
+  return (text || '').trim();
+}
+
+export async function getColumnValuesSimple(
+  headersLocator: Locator,
+  rowsLocator: Locator,
+  columnKey: string,
+  columnCleaner?: Record<string, ColumnTextCleaner>,
+  coloumnMapCache?: ColumnMap | null
+): Promise<string[]> {
+  const result = await getColumnInfoSimple(headersLocator, columnKey, coloumnMapCache);
+  const count = await rowsLocator.count();
+
+  const values: string[] = [];
+  for (let i = 0; i < count; i++) {
+    const cell = rowsLocator.nth(i).locator(`td:nth-child(${result.info.index + 1})`);
+    values.push(await getCellTextSimple(cell, columnKey, columnCleaner));
+  }
+  return values;
 }
