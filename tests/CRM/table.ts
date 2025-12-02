@@ -236,72 +236,236 @@
 //output: là chuỗi sạch
 // vấn đề là chúng ta cần xử lý 1 số cột thôi đặc biệt và các cộit khác xử lý bình thường
 
-type DataCleaner = (rawValue: string) => string;
+// type DataCleaner = (rawValue: string) => string;
 
-type CleanerMap = Record<string, DataCleaner>;
+// type CleanerMap = Record<string, DataCleaner>;
 
-const dataCleaner: CleanerMap = {
-  //luật 1 : giá tiền
-  // input "$ 1,200.50 USD" -> output: 1200:50
-  price: (raw) => {
-    if (!raw) return '0';
-    let text = raw;
-    if (text.includes('$')) {
-      text = text.replace('$', '');
-    }
-    if (text.includes('USD')) {
-      text.replace('USD', '');
-    }
-    //1,200 => [1, 200] -> 1200
-    text = text.split(',').join('');
-    return text.trim();
-  },
-  //luật 2: trạng thái
-  // ['ACTIVE'] => 'Active'
-  status: (raw) => {
-    if (!raw) return '';
-    let text = raw.trim();
-    if (text.startsWith('[')) {
-      text = text.replace('[', '');
-    }
-    if (text.endsWith(']')) {
-      text = text.replace(']', '');
-    }
-    const firstChar = text.charAt(0).toUpperCase();
-    const rest = text.slice(1).toLowerCase();
-    return firstChar + rest;
-  },
-};
+// const dataCleaner: CleanerMap = {
+//   //luật 1 : giá tiền
+//   // input "$ 1,200.50 USD" -> output: 1200:50
+//   price: (raw) => {
+//     if (!raw) return '0';
+//     let text = raw;
+//     if (text.includes('$')) {
+//       text = text.replace('$', '');
+//     }
+//     if (text.includes('USD')) {
+//       text.replace('USD', '');
+//     }
+//     //1,200 => [1, 200] -> 1200
+//     text = text.split(',').join('');
+//     return text.trim();
+//   },
+//   //luật 2: trạng thái
+//   // ['ACTIVE'] => 'Active'
+//   status: (raw) => {
+//     if (!raw) return '';
+//     let text = raw.trim();
+//     if (text.startsWith('[')) {
+//       text = text.replace('[', '');
+//     }
+//     if (text.endsWith(']')) {
+//       text = text.replace(']', '');
+//     }
+//     const firstChar = text.charAt(0).toUpperCase();
+//     const rest = text.slice(1).toLowerCase();
+//     return firstChar + rest;
+//   },
+// };
 
-function processRow(
-  rowData: Record<string, string>,
+// function processRow(
+//   rowData: Record<string, string>,
 
-  cleaners: CleanerMap
-): Record<string, string> {
-  const cleanRow: Record<string, string> = {};
-  const keys = Object.keys(rowData);
+//   cleaners: CleanerMap
+// ): Record<string, string> {
+//   const cleanRow: Record<string, string> = {};
+//   const keys = Object.keys(rowData);
 
-  for (const key of keys) {
-    const rawValue = rowData[key];
-    const cleanerFunction = cleaners[key];
-    if (cleanerFunction) {
-      console.log(`Dang sua cot ${key}`);
-      cleanRow[key] = cleanerFunction(rawValue);
-    } else {
-      // nếu k có bộ xử lý riêng cho mỗi màn hình
-      cleanRow[key] = rawValue.trim();
-    }
+//   for (const key of keys) {
+//     const rawValue = rowData[key];
+//     const cleanerFunction = cleaners[key];
+//     if (cleanerFunction) {
+//       console.log(`Dang sua cot ${key}`);
+//       cleanRow[key] = cleanerFunction(rawValue);
+//     } else {
+//       // nếu k có bộ xử lý riêng cho mỗi màn hình
+//       cleanRow[key] = rawValue.trim();
+//     }
+//   }
+//   return cleanRow;
+// }
+
+// const dirtyData = {
+//   id: '    101    ',
+//   price: '$ 1,500.00 USD',
+//   status: '[in_STOCK]',
+// };
+
+// console.log('Du lieu goc', dirtyData);
+
+// const cleanData = processRow(dirtyData, dataCleaner);
+// console.log('Du lieu sach', cleanData);
+
+///
+// ví dụ: về KTS và căn phòng đang sửa
+
+// vòng lặp buildRowDataSimple là KTS đi kiểm tra từng phòng
+// biến currentColumnMap là cuộn bản vẽ KTS đang cầm trên cay
+// hàm getColumnInfoSimple:  là trợ lý công trình (người nắm thông tin mưới nhất của chủ nahf)
+
+// .. tình huống ban đầu: KTS cầm bản vễ V1. -> chủ nhà đột ngột đổi ý: đập phòng ngủ đi, xây bằng phòng karaoke
+// -> trợ lý getColumnInfoSimple sẽ cập nhậ ra bản vẽ V2
+
+// Kb1: KTS bảo thủ ko gán lại biến
+
+// let banVeTrenTay = BanVe_V1
+
+// for (const phong of ['Phong Khach', 'Phong ngu', 'phong bep']){
+//   cosnt ketQua = hoiTroLy(phong, banVeTrenTay)
+
+//   KTS co chapL: nhan ban ve moi nhung vat di
+//   // banVeTrenTay = ketQua.banvemoi
+// }
+
+const BAN_VE_V1 = { version: 1, data: 'Phong ngu cu' };
+const BAN_VE_V2 = { version: 2, data: 'Phong karaoke moi' };
+
+function hoiTroLy(phong, banVeHientai) {
+  if (phong === 'PhongNgu' && banVeHientai.version === 1) {
+    console.log('Tro ly: ban vẽ cũ rồi sếp ơi! cầm bản v2 đi');
+    return { banVeMoi: BAN_VE_V2 };
   }
-  return cleanRow;
+  //conf lai cu dung ban ve hien tai
+  return { banVeMoi: BAN_VE_V1 };
 }
 
-const dirtyData = {
-  id: '    101    ',
-  price: '$ 1,500.00 USD',
-  status: '[in_STOCK]',
-};
+let banVeTrenTay = BAN_VE_V1;
 
-console.log('Du lieu goc', dirtyData);
+const danhSachPhong = ['PhongKhach', 'PhongNgu', 'PhongBep'];
 
-const cleanData = processRow(dirtyData, dataCleaner);
-console.log('Du lieu sach', cleanData);
+for (const phong of danhSachPhong) {
+  console.log(`Đến kiểm tra phòng ${phong}`);
+  console.log(` KTS đnag cầm bản vẽ ${banVeTrenTay.version}`);
+  const ketQua = hoiTroLy(phong, banVeTrenTay);
+
+  //dòng quyết định
+  banVeTrenTay = ketQua.banVeMoi;
+}
+//phiên bản tiểu học
+function isMatch(cellText: string, keyWord: string): boolean {
+  return cellText.toLowerCase().includes(keyWord.toLowerCase());
+}
+
+const ketQua = isMatch('Apple Inc,', 'apple');
+console.log(ketQua);
+//phiên bản trung học
+
+type Matcher = string | ((text: string) => boolean);
+
+function checkCondition(cellValue: string, condition: Matcher) {
+  //nếu truyền 1 vào chuỗi apple
+  if (typeof condition === 'string') {
+    return cellValue.includes(condition);
+  }
+  if (typeof condition === 'function') {
+    return condition(cellValue);
+  }
+  return false;
+}
+const rowText = '800';
+
+//c1: dung string
+const result1 = checkCondition(rowText, '800');
+console.log(result1);
+
+//c2; Dung function (man nhat)
+
+const result2 = checkCondition(rowText, (text) => {
+  //chuyen chu thanh so
+  const number = parseInt(text);
+  //tim cho toi number > 1000 d
+  return number > 1000;
+});
+console.log(result2);
+
+const KHO_HANG = [
+  { id: 1, ten: 'Samsung S24', mau: 'Đen', gia: '20tr', tonKho: 10, viTri: 'Kệ A' },
+  { id: 2, ten: 'iphone 15', mau: 'Đen', gia: '25tr', tonKho: 2, viTri: 'Kệ B' },
+  { id: 3, ten: 'xiaomi 12', mau: 'Hồng', gia: '15tr', tonKho: 3, viTri: 'Kệ C' },
+  { id: 4, ten: 'iphone 17 promax', mau: 'Titan', gia: '40tr', tonKho: 18, viTri: 'Kệ D' },
+];
+
+const COT_MAC_DINH = ['ten', 'gia'];
+
+//B1 Định vị
+function robotTimHang(filter) {
+  console.log(`B1: Đang đi tìm hàng khớp lệnh ${filter}`);
+
+  for (const sanPham of KHO_HANG) {
+    let khopTatCa = true;
+
+    for (const key of Object.keys(filter)) {
+      if (sanPham[key] !== filter[key]) {
+        khopTatCa = false;
+        break;
+      }
+    }
+    if (khopTatCa) {
+      console.log(`Tìm thấy tại: ${sanPham.viTri} (ID: ${sanPham.id})`);
+      return sanPham;
+    }
+  }
+  throw new Error(' Khong tim thay hang');
+}
+
+//B2. Quyết định
+
+function roboQuyetDinhThongTin(filter, yeuCauLay, macDinh) {
+  //ưu tiên 1: sếp chỉ định rõ ràng
+  if (yeuCauLay && yeuCauLay.length > 0) {
+    console.log(` Sếp bảo lấy: ${yeuCauLay}`);
+    return yeuCauLay;
+  }
+  //ưu tiên 2
+  if (macDinh && macDinh.length > 0) {
+    console.log(`e lấy theo mặc định ${macDinh}`);
+    return macDinh;
+  }
+
+  // ưu tiên 3. lấy đúng cái dùng để tìm kiếm
+  console.log('Lay theo fileter:', Object.keys(filter));
+  return Object.keys(filter);
+}
+
+//B3 trích xuất
+function robotDocThongTin(sanPham, danhSachCanLay) {
+  console.log('Dang doc thong tin');
+  const baoCao = {};
+  for (const thongTin of danhSachCanLay) {
+    baoCao[thongTin] = sanPham[thongTin];
+  }
+  return baoCao;
+}
+
+///
+function roBotThucHienNhiemvu(filters, columnToget) {
+  //b1
+  const sanPham = robotTimHang(filters);
+  //b2
+  const cacCotCanLay = roboQuyetDinhThongTin(filters, columnToget, COT_MAC_DINH);
+
+  //b3
+  const ketQua = robotDocThongTin(sanPham, cacCotCanLay);
+
+  console.log('ket qua bao cao', ketQua);
+
+  return ketQua;
+}
+
+roBotThucHienNhiemvu(
+  {
+    ten: 'xiaomi 12',
+    mau: 'Hồng',
+  },
+  ['ten', 'gia']
+);

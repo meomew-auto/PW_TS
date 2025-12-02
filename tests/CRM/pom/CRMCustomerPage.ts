@@ -4,6 +4,9 @@ import {
   createColumnMap,
   ColumnTextCleaner,
   getColumnValuesSimple,
+  getTableDataSimple,
+  TextMatcher,
+  findRowByColumnValueSimple,
 } from '../helpers/TableColumnHelpers';
 import { BasePage } from './BasePage';
 import { Locator, Page, expect } from '@playwright/test';
@@ -60,6 +63,7 @@ export class CRMCustomerPage extends BasePage {
     await this.waitForTableReady();
     return this.getRowsLocator().count();
   }
+
   private get columnCleaner(): Record<string, ColumnTextCleaner> {
     return {
       company: async (cell: Locator) => {
@@ -74,6 +78,7 @@ export class CRMCustomerPage extends BasePage {
       },
     };
   }
+
   async getColumnValues(columnKey: CustomerColumnKey | string) {
     await this.waitForTableReady();
     const coloumnMap = await this.ensureColumnMapCache();
@@ -81,6 +86,36 @@ export class CRMCustomerPage extends BasePage {
       this.element('tableHeaders'),
       this.getRowsLocator(),
       columnKey,
+      this.columnCleaner,
+      coloumnMap
+    );
+  }
+
+  async getTableData(
+    coloumnKeys: Array<CustomerColumnKey | string>
+  ): Promise<Array<Record<string, string>>> {
+    await this.waitForTableReady();
+    const coloumnMap = await this.ensureColumnMapCache();
+    return getTableDataSimple(
+      this.element('tableHeaders'),
+      this.getRowsLocator(),
+      coloumnKeys,
+      this.columnCleaner,
+      coloumnMap
+    );
+  }
+
+  async findRowByColumnValue(
+    columnKey: CustomerColumnKey | string,
+    macher: TextMatcher
+  ): Promise<Locator> {
+    await this.waitForTableReady();
+    const coloumnMap = await this.ensureColumnMapCache();
+    return findRowByColumnValueSimple(
+      this.element('tableHeaders'),
+      this.getRowsLocator(),
+      columnKey,
+      macher,
       this.columnCleaner,
       coloumnMap
     );

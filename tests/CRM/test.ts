@@ -443,3 +443,14 @@ console.log(nc2);
 //       return this.page.locator(locatorDef);
 //     };
 //   }
+
+// ý tưởng để tìm kiếm và trích xuất thông tin theo nhiều điều kiện
+// B1. Định vị (locate)
+// /// quét qua tất cả các dòng để tìm ra đúng dòng <tr> thỏa mãn điều kiện
+// B2. Quyết định
+// . sau khi tìm đc rồi, câu hỏi tiếp theo là : chúng ta cần lấy thông tin gì ?
+// B3. Trích xuất
+// thu hoạch giá trị
+// mỗi 1 object là 1 tr
+
+///đầu ra muốn tìm đc vị trí kệ C
