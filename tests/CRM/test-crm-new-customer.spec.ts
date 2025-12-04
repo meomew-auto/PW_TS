@@ -4,6 +4,7 @@ import { CRMDashboardPage } from './pom/CRMDashboardPage';
 import { CRMCustomerPage } from './pom/CRMCustomerPage';
 import { createMinimalCustomerInfo } from './utils/test-data';
 import { CRMNewCustomerPage } from './pom/CRMNewCustomerPage';
+import { getTestDataSimple } from './test-data';
 
 test.beforeEach(async ({ page }) => {
   const loginPage = new CRMLoginPage(page);
@@ -35,6 +36,8 @@ test('TC_CUST_01- Tạo Customer (Chỉ nhập trường bắt buộc)', async (
     await customersPage.clickAddNewCustomer();
     await newCustomerPage.expectOnPage();
   });
+  const minimalData = getTestDataSimple('customers', 'minimal');
+  console.log(minimalData.company);
   const customerInfo = createMinimalCustomerInfo();
   await test.step('Fill required company field', async () => {
     await newCustomerPage.fillCompany(customerInfo.company);

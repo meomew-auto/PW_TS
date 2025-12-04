@@ -288,3 +288,65 @@ export async function findRowByFilterSimple(
   }
   throw new Error('Unable to find row matchign filter');
 }
+const resolveColumnKeysForRowData = (
+  filters: Record<string, TextMatcher>,
+  columnKeys?: string[],
+  defaultColumnKeys?: string[]
+): string[] => {
+  // Priority 1: Nếu có columnKeys và không rỗng → dùng columnKeys
+  if (columnKeys && columnKeys.length > 0) {
+    return columnKeys;
+  }
+
+  // Priority 2: Nếu không → kiểm tra defaultColumnKeys
+  if (defaultColumnKeys && defaultColumnKeys.length > 0) {
+    return defaultColumnKeys;
+  }
+
+  // Priority 3: Nếu không → dùng keys từ filters
+  const keys = Object.keys(filters);
+
+  // Validation: Phải có ít nhất 1 key
+  if (keys.length === 0) {
+    throw new Error('No column keys provided for row data extraction.');
+  }
+
+  return keys;
+};
+export async function getRowDataByFiltersSimple(
+  headersLocator: Locator,
+  rowsLocator: Locator,
+  filters: Record<string, TextMatcher>,
+  columnKeys?: string[],
+  defaultColumnKeys?: string[],
+  columnCleaners?: Record<string, ColumnTextCleaner>,
+  columnMapCache?: ColumnMap | null
+): Promise<Record<string, string>> {
+  // Bước 1: Tìm row khớp với filters
+  // findRowByFiltersSimple sẽ tìm row đầu tiên khớp với tất cả filters
+  const row = await findRowByFilterSimple(
+    headersLocator,
+    rowsLocator,
+    filters,
+    columnCleaners,
+    columnMapCache
+  );
+
+  // Bước 2: Xác định columnKeys để lấy dữ liệu
+  // resolveColumnKeysForRowData sẽ quyết định dùng columnKeys nào
+  // Priority: columnKeys > defaultColumnKeys > keys từ filters
+  const resolvedKeys = resolveColumnKeysForRowData(filters, columnKeys, defaultColumnKeys);
+
+  // Bước 3: Lấy dữ liệu từ row
+  // buildRowDataSimple sẽ lấy text từ các cells tương ứng với resolvedKeys
+  const result = await buildRowDataSimple(
+    headersLocator,
+    row,
+    resolvedKeys,
+    columnCleaners,
+    columnMapCache
+  );
+
+  // Trả về rowData (object chứa dữ liệu)
+  return result.rowData;
+}

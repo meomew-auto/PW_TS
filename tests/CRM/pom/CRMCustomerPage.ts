@@ -7,6 +7,7 @@ import {
   getTableDataSimple,
   TextMatcher,
   findRowByColumnValueSimple,
+  getRowDataByFiltersSimple,
 } from '../helpers/TableColumnHelpers';
 import { BasePage } from './BasePage';
 import { Locator, Page, expect } from '@playwright/test';
@@ -21,7 +22,15 @@ export type CustomerColumnKey =
   | 'active'
   | 'groups'
   | 'dateCreated';
-
+export const DEFAULT_CUSTOMER_TABLE_COLUMNS: CustomerColumnKey[] = [
+  'company',
+  'primaryContact',
+  'primaryEmail',
+  'phone',
+  'active',
+  'groups',
+  'dateCreated',
+] as const;
 export class CRMCustomerPage extends BasePage {
   private columnMapCache: ColumnMap | null = null;
 
@@ -90,7 +99,9 @@ export class CRMCustomerPage extends BasePage {
       coloumnMap
     );
   }
-
+  async clickAddNewCustomer() {
+    await this.clickWithLog(this.element('newCustomerLink'));
+  }
   async getTableData(
     coloumnKeys: Array<CustomerColumnKey | string>
   ): Promise<Array<Record<string, string>>> {
@@ -118,6 +129,23 @@ export class CRMCustomerPage extends BasePage {
       macher,
       this.columnCleaner,
       coloumnMap
+    );
+  }
+
+  async getRowDataByFilters(
+    filters: Record<CustomerColumnKey | string, TextMatcher>,
+    columnKeys?: Array<CustomerColumnKey | string>
+  ): Promise<Record<string, string>> {
+    await this.waitForTableReady();
+    const columnMap = await this.ensureColumnMapCache();
+    return getRowDataByFiltersSimple(
+      this.element('tableHeaders'),
+      this.getRowsLocator(),
+      filters,
+      columnKeys,
+      DEFAULT_CUSTOMER_TABLE_COLUMNS,
+      this.columnCleaner,
+      columnMap
     );
   }
 }

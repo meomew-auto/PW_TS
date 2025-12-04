@@ -71,3 +71,25 @@ test('TC_03 - Tìm row theo company name', async ({ page }) => {
     console.log(await row.textContent());
   });
 });
+test('TC_04 - Tìm row theo nhiều điều kiện', async ({ page }) => {
+  const { dashboardPage, customersPage } = createCRMPages(page);
+
+  await test.step('Verify dashboard da load sau khi login', async () => {
+    await dashboardPage.expectOnPage();
+  });
+
+  await test.step('Navigate tu dashboardPage -> customer page', async () => {
+    await dashboardPage.navigateMenu('Customers');
+    await customersPage.expectOnPage();
+  });
+
+  await test.step('Find row by company name', async () => {
+    const rowData = await customersPage.getRowDataByFilters(
+      {
+        company: '__@231dsa',
+      },
+      ['company', 'active']
+    );
+    console.log(' Row data via helper:', rowData);
+  });
+});
