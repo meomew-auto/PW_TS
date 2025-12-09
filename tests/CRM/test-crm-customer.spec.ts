@@ -1,4 +1,4 @@
-import { test, Page, expect } from '@playwright/test';
+import { test, Page, expect } from '@playwright/test'; //1. Gọi con robot ra (DI CONTAINER)
 import { CRMLoginPage } from './pom/CRMLoginPage';
 import { CRMDashboardPage } from './pom/CRMDashboardPage';
 import { CRMCustomerPage } from './pom/CRMCustomerPage';
@@ -17,7 +17,10 @@ function createCRMPages(page: Page) {
   };
 }
 
+//2 Ra lệnh viết test
 test('TC_01 - Lấy toàn bộ dữ liệu 1 cột sử dụng column Map', async ({ page }) => {
+  //3 .. cho tao cái page (request/resolve) => pw robot tiêm (inject) các phụ thuộc vào page choi mình dùng
+  //4. Dâng page tận miệng , giờ bạn chỉ việc dùng
   const { dashboardPage, customersPage } = createCRMPages(page);
 
   await test.step('Verify dashboard da load sau khi login', async () => {
