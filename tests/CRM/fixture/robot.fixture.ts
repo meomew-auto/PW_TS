@@ -18,6 +18,7 @@ export const test = base.extend<{
   // món này siêu dễ ko cần nguyên liệu
 
   loiChao: async ({ page }, use) => {
+    //GD1:
     await page.goto('https://playwright.dev');
     const title = await page.title();
 
@@ -27,6 +28,9 @@ export const test = base.extend<{
     //2. dang mon (bung ra ban)
 
     ///robot dua text cho KH va cho
+    //Gd2; chạy tới await use() -> STOP -> trao quyền điều khiển sân chơi cho file test
     await use(`Xin chao! Ban dang o trang ${title}`);
+
+    //Gd3:dù test có chạy pass hay fail -=> teardown
   },
 });
