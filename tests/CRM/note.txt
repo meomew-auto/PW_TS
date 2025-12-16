@@ -32,3 +32,77 @@ ví dụ: hệ thống nhân viên và công cụ chung
 //2. File app.fixture.ts (tầng 3): chứa công thưucs tạo ra các POM (dashboard, customer)
 //3. Fiel gatekeeper.fixture.ts (tổng hành dinh): nơi hợp nhất tất cả lại để sử dụng
 
+cấu trúc chuẩn cho 2 môi trường (dev và stagging)
+.env (1. cấu hình chung - ai cũng giống nhau)
+.env.development (2. cấu hình riêng cho DEV)
+.env.development.local(3. bí mật: chỉ máy bạn có - ko up lên git)
+.env.staging(4. cấu hình cho môi trường stagging)
+
+.. vị trí ở root (thư mục gốc ) ngang hàng với package.json
+
+
+
+thứ tự ưu tiên là
+// biến phục thuộc là NODE_ENV=abc
+.env.[NODE_ENV].local hoặc .env[NODE_ENV]
+
+1. .env (độ ưu tiên thấp nhất)
+2. .env.development (trung bình)
+3. .env.development.local(cao nhất ở môi trường dev)
+4. .env.staging (cao nhất ở môi trường stagging)
+
+//nguyên tắc -> cái load sẽ ghi đè cái load trước
+trên phiếu NODE_ENV ghi development -> thủ thư sẽ tìm tất cả môi trường có tên .env.development
+
+trường hợp mà NODE_ENV ghi staging -> thủ thư sẽ tìm cả môi trường có tên .env.staging
+
+để lấy thông tin biến mt ta dùng process.env.key mà ta mong muống
+process.env.BASE_URL -> https://dev.crm.anhtester.com
+
+ ////
+ Dotenv flow hay dotenv hoạt động dựa trên process.cwd() (current working directory - thư mục hiện tại
+ 
+ dang gõ lệnh)
+
+trên windows -> terminal là powershell
+
+trên gitbash/mac/linux/ -> mặc định
+
+WINDOW
+$env:NODE_ENV="staging";  npx playwright test ./tests/env-demo.spec.ts
+
+mac
+NODE_ENV=staging npx playwright test ./tests/env-demo.spec.ts
+
+as (alias) 
+ "test:dev": "cross-env NODE_ENV=development npx playwright test", -> shorcut -(alias)
+    "test:uat": "cross-env NODE_ENV=staging npx playwright test"
+
+    -> cross-env NODE_ENV=development npx playwright test ./tests/env-demo.spec.ts
+
+    npm run test:dev ./tests/env-demo.spec.ts
+
+
+
+
+    //hooks (life cycle)
+
+tứ trụ hooks (life cycle)
+
+
+
+beforeAll (worker) ---> 1 lần duy nhất /file
+
+beforeEach(test) chạy lặp lại mỗi lần trước MỖI test
+
+afterEach(test) . chạy lặp lại mỗi lần sau MỖI test
+
+afterAll(worker) -> 1 lần duy nhất sau khi chạy hết test
+
+woker reuse
+
+// 4 woker - 100 bài test
+
+
+1. woker 1 chạy before all (mở page)
+2. worker 1 chạy Test A(login -> chjuyeern sang dashboard)

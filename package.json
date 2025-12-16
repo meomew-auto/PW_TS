@@ -12,7 +12,9 @@
     "test": "playwright test",
     "test:ui": "playwright test --ui",
     "test:headed": "playwright test --headed",
-    "run:ts": "tsx"
+    "run:ts": "tsx",
+    "test:dev": "cross-env NODE_ENV=development npx playwright test",
+    "test:uat": "cross-env NODE_ENV=staging npx playwright test"
   },
   "keywords": [],
   "author": "",
@@ -30,7 +32,9 @@
   },
   "dependencies": {
     "@faker-js/faker": "^10.1.0",
+    "cross-env": "^10.1.0",
     "date-fns": "^4.1.0",
+    "dotenv-flow": "^4.1.0",
     "eslint-plugin-playwright": "^2.2.2"
   }
 }
