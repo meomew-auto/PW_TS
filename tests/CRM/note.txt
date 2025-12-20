@@ -106,3 +106,100 @@ woker reuse
 
 1. woker 1 chạy before all (mở page)
 2. worker 1 chạy Test A(login -> chjuyeern sang dashboard)
+
+
+
+// playwright thực hiện 2 bước
+b1. là khoanh vùng (scoping) = dựng hào rào nơi folder test chúng ta sẽ thực hiện thong qua testDIr
+b2. lập danh sách ứng viên () -> quét hết để lấy fiel theo testMatch
+so với ví dụ checkout.txt -> () đã bị bỏ đi vì ko hoipwj lệ
+-> ket qua la pw tao dc 1 danh sach noi bo gom nhugn file hop le
+
+khi đó chúng ta gõ
+npx playwright test checkout ->
+checkout.spec.ts  
+tests/CRM/checkout.spec.ts 
+so với tests/checkout.spec.ts -> khớp (có chứa chữ checkout)
+/// tests/logintest.spec.ts ->ko khớp -. ko chạy
+
+//cú pháp glob (ko phải regex)
+
+** -> recursive wildcard -> bất kì thư mục nào sâu bao nhiêu cũng được
+
+* -> bất kì tên gì 
+.spec.ts -> extenion đuôi cố định
+**/*.spec.ts => 
+
+projects
+Mục đích 1: tối ưu hóa tài nguyên 
+.. vấn dề 100 TCs APi và 100 TCs UI
+mục đíhc 2: ma trận kiểm thử
+(test matrix)
+
+mục đích 3: Điều phối luồng chạy *orchestration
+có thể có cấu hình Setup trạng thái đăng nhập -> chạy test -> tear down
+thiết lập sự phụ thuộc vàoi giữa các file test
+
+
+Đặc tính của project -> kế thừa và ghji đè
+
+///1 Ưu tiên 1: câuis hình trong từng fiel test 
+
+//ưu tiên 2: cấu hình trong trong project
+
+//ưu tiên 3" cấu hình trong global
+
+
+cái riêng PROJECT CONFIG SẼ GHI ĐÈ CÁI CHUNG TOP LEVEL CONFIG ->
+
+
+global config ()
+
+
+-- chay project them arugment 
+
+--project=name
+
+
+
+
+
+
+                chrome  firefox iphone12
+
+    headless    Y           Y       Y    
+    slow:       N           Y       N
+    Video:       Y          N       N   
+
+
+
+- Quy trình sàng lọc nhiều project
+=> lớp 1 quét từ testDir
+nhiệm vụ là tìm tất cả file có thể test dựa vào testDir
+lúc này chưa quan tâm tới project nào cả
+
+lớp 2 ghép cặp dự án
+
+== đem từng file ở lớp 1 - .ướp vàop từng project
+- logic
+- ->  
+
+
+kết quả của lớp 2 (danh sách công việc tiềm năng)
+npx playwright test[]
+1. Job A. spec.ts chạy trên project API (api.spec1.ts)
+2. Job B chạy trên desktop (cart.spec1.ts)
+3. Job C chạy trên desktop (cart.spec1.ts)
+4. Job D chạy trên mobile (login.spec1.ts)
+5. Job E. chạy trên mobile (login.spec1.ts)
+
+
+
+lớp 3 bộ lọc CLI (user filter) -> lọc lại danh sách 5 jobs trên dựa ctreen những gì đã gõ
+npx playwright test (filter)
+
+1. là filter theo tên file test login
+
+dấu "/" biểu thị cho folder
+2. tìm theo folder
+npx playwright test ui/
