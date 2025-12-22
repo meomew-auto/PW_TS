@@ -14,7 +14,9 @@
     "test:headed": "playwright test --headed",
     "run:ts": "tsx",
     "test:dev": "cross-env NODE_ENV=development npx playwright test",
-    "test:uat": "cross-env NODE_ENV=staging npx playwright test"
+    "test:crm": "cross-env NODE_ENV=development npx playwright test",
+    "test:crm:uat": "cross-env NODE_ENV=staging npx playwright test",
+    "test:lessons": "cross-env NODE_ENV=development npx playwright test --config playwright.lessons.config.ts"
   },
   "keywords": [],
   "author": "",

@@ -1,4 +1,4 @@
-import { test, Page, expect } from '@playwright/test'; //1. Gọi con robot ra (DI CONTAINER)
+import { test, Page, expect } from '@playwright/test'; 
 import { CRMLoginPage } from './pom/CRMLoginPage';
 import { CRMDashboardPage } from './pom/CRMDashboardPage';
 import { CRMCustomerPage } from './pom/CRMCustomerPage';
@@ -74,6 +74,7 @@ test('TC_03 - Tìm row theo company name', async ({ page }) => {
     console.log(await row.textContent());
   });
 });
+
 test('TC_04 - Tìm row theo nhiều điều kiện', async ({ page }) => {
   const { dashboardPage, customersPage } = createCRMPages(page);
 
