@@ -1,12 +1,23 @@
-
-# Playwright
+# Dependencies
 node_modules/
+
+# Playwright outputs
 /test-results/
 /playwright-report/
 /blob-report/
 /playwright/.cache/
-/playwright/.auth/
 
+# Auth state files (SENSITIVE - không commit!)
+/auth/
+*.state
+user.json
+
+# Playwright MCP temp files
+.playwright-mcp/
+
+# Downloads from tests
+/downloads/
+
+# Environment files (local secrets)
 .env.local
 .env.*.local
-./auth 
