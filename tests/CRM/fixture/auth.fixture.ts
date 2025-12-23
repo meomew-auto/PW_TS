@@ -23,21 +23,16 @@ export const auth = base.extend<AuthFixtures>({
 
   // Fixture này nhận vào 'loginPage' và trả về 'page' đã login
 
-  authedPage: async ({ loginPage, page }, use) => {
-    console.log('🔐 [Gatekeeper] Đang kiểm tra an ninh...');
+  authedPage: async ({ loginPage, page, storageState }, use) => {
+    const isGuestMode = typeof storageState === 'object' && storageState.cookies?.length === 0;
 
-    // Thực hiện hành động Login
-
-    await loginPage.goto();
-
-    await loginPage.login('admin@example.com', '123456');
-
-    await loginPage.expectLoggedIn();
-
-    console.log('✅ [Gatekeeper] Đăng nhập thành công! Mời vào.');
-
-    // TRẢ VỀ: Cái 'page' này giờ đã có Cookies xịn
-
+    if (isGuestMode) {
+      console.log('⚠️ Token hết hạn. Đang đăng nhập lại...');
+      await loginPage.goto();
+      await loginPage.login('admin@example.com', '123456');
+      await loginPage.expectLoggedIn(); // Không làm gì cả, cứ thế đưa page cho dùng
+    }
+    // TRẢ VỀ PAGE CHO BÀI TEST
     await use(page);
   },
 });

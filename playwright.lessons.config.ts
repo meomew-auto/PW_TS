@@ -11,25 +11,33 @@ dotenvflow.config({
 
 export default defineConfig({
   testDir: './tests/lessons',
-  globalSetup: './global-setup.ts',
-  globalTeardown: './global-teardown.ts',
   fullyParallel: false,
   forbidOnly: !!process.env.CI,
-  retries: process.env.CI ? 2 : 0,
+  retries: process.env.CI ? 2 : 1,
   workers: process.env.CI ? 1 : undefined,
   reporter: 'html',
   use: {
-    baseURL: 'https://staging.example.com', 
+    baseURL: 'https://crm.anhtester.com',
     trace: 'on-first-retry',
+    headless: true,
   },
 
   projects: [
+    { name: 'setup', testMatch: '**/*.setup.ts', teardown: 'cleanup' },
     {
-      name: 'Lessons',
-      testMatch: ['**/*.spec.ts', '**/*.spec1.ts', '**/*.spec2.ts'],
+      name: 'cleanup',
+      testMatch: '**/*.teardown.ts',
+    },
+
+    {
+      name: 'chromium',
       use: {
         ...devices['Desktop Chrome'],
+        storageState: './auth/user.json',
       },
+      dependencies: ['setup'],
     },
   ],
 });
+
+//userAgent:

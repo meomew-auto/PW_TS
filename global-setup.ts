@@ -1,12 +1,23 @@
-import { FullConfig } from '@playwright/test';
+import { chromium, FullConfig } from '@playwright/test';
 
 async function globalSetup(config: FullConfig) {
-  console.log(`[GLOBAL SETUP] bawts đầu khởi động hệ thống`);
+  const browser = await chromium.launch(); // Tự bật browser
 
-  await new Promise((r) => setTimeout(r, 1000));
+  const page = await browser.newPage();
 
-  process.env.DB_CONNECTION_URL = 'postgres://admin:123';
-  process.env.API_PORT = '8080';
+  try {
+    await page.goto('https://github.com/login');
+
+    await page.click('input[name="commit-sign-in"]', { timeout: 5000 });
+
+    await page.context().storageState({ path: 'auth.json' });
+  } catch (error) {
+    console.error(' Login thất bại!');
+
+    throw error;
+  } finally {
+    await browser.close();
+  }
 }
 
 export default globalSetup;

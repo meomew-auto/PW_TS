@@ -5,18 +5,19 @@ export class CommonHelpers {
 
   async selectBootstrapOption(button: Locator, text: string): Promise<void> {
     await button.click();
-    // Scope to the currently open dropdown menu (visible .dropdown-menu)
-    // This avoids strict mode violation when multiple dropdowns have same option text
-    const openMenu = this.page.locator('.dropdown-menu.open, .dropdown-menu:visible, .bootstrap-select.open .dropdown-menu').first();
+    
+    // Đợi dropdown mở (Bootstrap thêm class 'open' vào parent .bootstrap-select)
+    const dropdownContainer = button.locator('xpath=ancestor::div[contains(@class,"bootstrap-select")]');
+    const openMenu = dropdownContainer.locator('.inner.open');
+    await openMenu.waitFor({ state: 'visible' });
+    
+    // CHỈ target <a role="option"> (không phải <option> ẩn trong select gốc)
+    // Vì Bootstrap tạo cả 2: <option> ẩn và <a role="option"> hiển thị
     const option = openMenu
-      .locator("a[role='option']")
-      .filter({ has: this.page.locator('span.text', { hasText: text }) });
-    if (await option.count()) {
-      await option.click();
-      return;
-    }
-    // đề phòng nếu như mà getbyfilter ko đc.
-    await this.page.locator(`//a[normalize-space()='${text}']`).first().click();
+      .locator('a[role="option"]')
+      .filter({ hasText: text });
+    
+    await option.click();
   }
 
     async getBootstrapSelectTextWithRegex(button: Locator): Promise<string> {

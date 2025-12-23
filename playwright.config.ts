@@ -1,5 +1,6 @@
 import { defineConfig, devices } from '@playwright/test';
 import dotenvflow from 'dotenv-flow';
+import { EnvManager } from './tests/utils/EnvManager';
 
 if (!process.env.NODE_ENV) {
   process.env.NODE_ENV = 'development';
@@ -32,12 +33,19 @@ export default defineConfig({
 
   /* Configure projects */
   projects: [
+     {
+      name: 'setup',
+      testMatch: '**/*.setup.ts',
+    },
     {
       name: 'Start CRM',
       testMatch: '**/*.spec.ts',
       use: {
         ...devices['Desktop Chrome'],
+        storageState: EnvManager.get('STORAGE_STATE_PATH')!,
+        
       },
+      dependencies: ['setup'],
     },
   ],
 });

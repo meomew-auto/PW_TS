@@ -2,14 +2,12 @@ import { test, expect } from '../fixture/gatekeeper.fixture';
 import { createMinimalCustomerInfo, createFullCustomerInfo } from '../../utils/test-data';
 import { CustomerProfilePage } from '../pom/CustomerProfilePage';
 
-
 test.describe('Customer Creation', () => {
-  
-  test('TC_CUST_01 - Tạo Customer (Chỉ nhập trường bắt buộc)', async ({ 
-    dashboardPage, 
-    customersPage, 
+  test.only('TC_CUST_01 - Tạo Customer (Chỉ nhập trường bắt buộc)', async ({
+    dashboardPage,
+    customersPage,
     newCustomerPage,
-    authedPage 
+    authedPage,
   }) => {
     await test.step('Verify dashboard loaded after login', async () => {
       await dashboardPage.expectOnPage();
@@ -38,11 +36,11 @@ test.describe('Customer Creation', () => {
     });
   });
 
-  test('TC_CUST_02 - Tạo Customer (Nhập đầy đủ thông tin)', async ({ 
-    dashboardPage, 
-    customersPage, 
+  test('TC_CUST_02 - Tạo Customer (Nhập đầy đủ thông tin)', async ({
+    dashboardPage,
+    customersPage,
     newCustomerPage,
-    authedPage 
+    authedPage,
   }) => {
     await test.step('Navigate to New Customer', async () => {
       await dashboardPage.navigateMenu('Customers');
@@ -68,5 +66,4 @@ test.describe('Customer Creation', () => {
       await profilePage.expectCustomerDetails(fullData);
     });
   });
-
 });

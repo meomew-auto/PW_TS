@@ -1,0 +1,233 @@
+thằng POM
+sẽ đảm bảo cái việc là tách biệt trách nhiệm - > trách nhiệm đơn lẻ 
+- phân chia thành 2 thành phần chính
+1. kịch bản test(test script):  đại diện cho business logic
+2. đối tượng trang(page object): đại diện cho technical implenmentation -> tương tác với UI như thế nào
+-> chia thành các class -> mỗi 1 class địa diện cho 1 trang 
+
+--> giải quyết đc 3 cái thách thức lớn nhất trong auto
+1. tính dễ bảo trì: 
+- nó sẽ tập trung tất cả các selector và phương thức của trang custom  bao gồm ví dụ là: company locator
+2. Tính tái sử dụng:
+- tạo ra các phương thức (actions) địa diện cho hành vi nghiệp vụ (business behavior )
+- > ví dụ tao có loginPage.login('user', 'password')
+3. Tính dễ đọc ; 
+
+Để giải quyết vấn đề DRY (don't repeat yourself) => base page( trang cơ sở) 
+basepage -> là 1 lớp cha trừu tượng mà tất cả các page object khác (loginpage), sẽ kế thừa
+=> đóng vai trò như 1 hd giao diện chung. định nghĩa tập hợp các yếu tố và hành động
+mà mọi trang trong ứng dụng dều phải có quyền truy cập
+
+ví dụ: hệ thống nhân viên và công cụ chung
+-> mọi nhân viên đều cần sử dụng chung 1 số công cụ của công ty , ví dụ như là email service
+
+
+
+
+
+// cấu trúc file hệ thống sẽ xây dựng cho bộ fixture của chúng ta
+
+/// chia nhỏ trách nhiệm ra 3 file chính 
+//1. File auth.fixture.ts (tầng 1 và tầng2): chứa logic login và tạo ra "người gác cổng)
+//2. File app.fixture.ts (tầng 3): chứa công thưucs tạo ra các POM (dashboard, customer)
+//3. Fiel gatekeeper.fixture.ts (tổng hành dinh): nơi hợp nhất tất cả lại để sử dụng
+
+cấu trúc chuẩn cho 2 môi trường (dev và stagging)
+.env (1. cấu hình chung - ai cũng giống nhau)
+.env.development (2. cấu hình riêng cho DEV)
+.env.development.local(3. bí mật: chỉ máy bạn có - ko up lên git)
+.env.staging(4. cấu hình cho môi trường stagging)
+
+.. vị trí ở root (thư mục gốc ) ngang hàng với package.json
+
+
+
+thứ tự ưu tiên là
+// biến phục thuộc là NODE_ENV=abc
+.env.[NODE_ENV].local hoặc .env[NODE_ENV]
+
+1. .env (độ ưu tiên thấp nhất)
+2. .env.development (trung bình)
+3. .env.development.local(cao nhất ở môi trường dev)
+4. .env.staging (cao nhất ở môi trường stagging)
+
+//nguyên tắc -> cái load sẽ ghi đè cái load trước
+trên phiếu NODE_ENV ghi development -> thủ thư sẽ tìm tất cả môi trường có tên .env.development
+
+trường hợp mà NODE_ENV ghi staging -> thủ thư sẽ tìm cả môi trường có tên .env.staging
+
+để lấy thông tin biến mt ta dùng process.env.key mà ta mong muống
+process.env.BASE_URL -> https://dev.crm.anhtester.com
+
+ ////
+ Dotenv flow hay dotenv hoạt động dựa trên process.cwd() (current working directory - thư mục hiện tại
+ 
+ dang gõ lệnh)
+
+trên windows -> terminal là powershell
+
+trên gitbash/mac/linux/ -> mặc định
+
+WINDOW
+$env:NODE_ENV="staging";  npx playwright test ./tests/env-demo.spec.ts
+
+mac
+NODE_ENV=staging npx playwright test ./tests/env-demo.spec.ts
+
+as (alias) 
+ "test:dev": "cross-env NODE_ENV=development npx playwright test", -> shorcut -(alias)
+    "test:uat": "cross-env NODE_ENV=staging npx playwright test"
+
+    -> cross-env NODE_ENV=development npx playwright test ./tests/env-demo.spec.ts
+
+    npm run test:dev ./tests/env-demo.spec.ts
+
+
+
+
+    //hooks (life cycle)
+
+tứ trụ hooks (life cycle)
+
+
+
+beforeAll (worker) ---> 1 lần duy nhất /file
+
+beforeEach(test) chạy lặp lại mỗi lần trước MỖI test
+
+afterEach(test) . chạy lặp lại mỗi lần sau MỖI test
+
+afterAll(worker) -> 1 lần duy nhất sau khi chạy hết test
+
+woker reuse
+
+// 4 woker - 100 bài test
+
+
+1. woker 1 chạy before all (mở page)
+2. worker 1 chạy Test A(login -> chjuyeern sang dashboard)
+
+
+
+// playwright thực hiện 2 bước
+b1. là khoanh vùng (scoping) = dựng hào rào nơi folder test chúng ta sẽ thực hiện thong qua testDIr
+b2. lập danh sách ứng viên () -> quét hết để lấy fiel theo testMatch
+so với ví dụ checkout.txt -> () đã bị bỏ đi vì ko hoipwj lệ
+-> ket qua la pw tao dc 1 danh sach noi bo gom nhugn file hop le
+
+khi đó chúng ta gõ
+npx playwright test checkout ->
+checkout.spec.ts  
+tests/CRM/checkout.spec.ts 
+so với tests/checkout.spec.ts -> khớp (có chứa chữ checkout)
+/// tests/logintest.spec.ts ->ko khớp -. ko chạy
+
+//cú pháp glob (ko phải regex)
+
+** -> recursive wildcard -> bất kì thư mục nào sâu bao nhiêu cũng được
+
+* -> bất kì tên gì 
+.spec.ts -> extenion đuôi cố định
+**/*.spec.ts => 
+
+projects
+Mục đích 1: tối ưu hóa tài nguyên 
+.. vấn dề 100 TCs APi và 100 TCs UI
+mục đíhc 2: ma trận kiểm thử
+(test matrix)
+
+mục đích 3: Điều phối luồng chạy *orchestration
+có thể có cấu hình Setup trạng thái đăng nhập -> chạy test -> tear down
+thiết lập sự phụ thuộc vàoi giữa các file test
+
+
+Đặc tính của project -> kế thừa và ghji đè
+
+///1 Ưu tiên 1: câuis hình trong từng fiel test 
+
+//ưu tiên 2: cấu hình trong trong project
+
+//ưu tiên 3" cấu hình trong global
+
+
+cái riêng PROJECT CONFIG SẼ GHI ĐÈ CÁI CHUNG TOP LEVEL CONFIG ->
+
+
+global config ()
+
+
+-- chay project them arugment 
+
+--project=name
+
+
+
+
+
+
+                chrome  firefox iphone12
+
+    headless    Y           Y       Y    
+    slow:       N           Y       N
+    Video:       Y          N       N   
+
+
+
+- Quy trình sàng lọc nhiều project
+=> lớp 1 quét từ testDir
+nhiệm vụ là tìm tất cả file có thể test dựa vào testDir
+lúc này chưa quan tâm tới project nào cả
+
+lớp 2 ghép cặp dự án
+
+== đem từng file ở lớp 1 - .ướp vàop từng project
+- logic
+- ->  
+
+
+kết quả của lớp 2 (danh sách công việc tiềm năng)
+npx playwright test[]
+1. Job A. spec.ts chạy trên project API (api.spec1.ts)
+2. Job B chạy trên desktop (cart.spec1.ts)
+3. Job C chạy trên desktop (login.spec1.ts)
+4. Job D chạy trên mobile (cart.spec1.ts)
+5. Job E. chạy trên mobile (login.spec1.ts)
+
+
+
+lớp 3 bộ lọc CLI (user filter) -> lọc lại danh sách 5 jobs trên dựa ctreen những gì đã gõ
+npx playwright test (filter)
+
+1. là filter theo tên file test login
+
+dấu "/" biểu thị cho folder
+2. tìm theo folder
+npx playwright test ui/
+3. tìm theo project
+ --project 
+npx playwright test login --project=mobile-ios           
+npx playwright test cart --project=mobile-ios           
+PW taoh ra cac JOB dua tren FIle + project
+
+
+GLOBAL Setup (sáng sớm): làm duy nhất 1 lần
+Tests(trong ngày): 
+GLOBAL TEARDOWN(đêm muộn): làm duy nhát 1 lần
+
+
+//cơ chế storageState -> lưu đc trạng thái đăng nhập của tài khoản và dùng cho các test case tiếp theo
+
+
+// có 2 cơ chế đăng nhập
+1.. cookie -based (sesion)
+stateful -> server phải lưu thông tin sessionID trong rAm/db => 1 phiên đăng nhập của người dùng
+browser tự động lưu vào cookie 
+sau đó browser tựk động gửi kèm mỗi request -
+
+2... token -based(jwt) ->  
+stateless -> server ko lưu trữu gì cả, thông tin nằm hết ở trong token
+-client (Fe) sẽ có clogic để lưu vào local storage (hoặc cookie)
+- client phải tự code để gắn vào header (FE) => mỗi 1 request phải có Authorization: Bearer........
+
+
+

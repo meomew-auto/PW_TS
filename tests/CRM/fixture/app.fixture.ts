@@ -18,7 +18,7 @@ export type AppFixtures = {
 type AppDeps = PlaywrightTestArgs & AuthFixtures;
 
 // 3. LOGIC
-// ⚠️ TẠI SAO KHÔNG DÙNG ': Fixtures<AppFixtures, AppDeps>'?
+//  TẠI SAO KHÔNG DÙNG ': Fixtures<AppFixtures, AppDeps>'?
 // 
 // Khi bạn dùng: export const appFixtures: Fixtures<AppFixtures, AppDeps> = {...}
 // TypeScript sẽ ép kiểu object thành type Fixtures phức tạp của Playwright
@@ -31,7 +31,7 @@ type AppDeps = PlaywrightTestArgs & AuthFixtures;
 // Vấn đề: TypeScript không thể tự động merge các Fixtures types phức tạp này
 // vì chúng có nhiều generic parameters và conditional types
 // 
-// ✅ GIẢI PHÁP: Bỏ ': Fixtures<...>' đi
+// GIẢI PHÁP: Bỏ ': Fixtures<...>' đi
 // → TypeScript sẽ infer type từ object thuần túy
 // → Khi spread, TypeScript merge object properties thay vì Fixtures types
 // → Đơn giản hơn và không bị lỗi!
@@ -42,7 +42,9 @@ export const appFixtures = {
   // TypeScript sẽ hiểu ngay mà không bắt bẻ khi merge
   
   dashboardPage: async ({ authedPage }: AppDeps, use: (r: CRMDashboardPage) => Promise<void>) => {
-    await use(new CRMDashboardPage(authedPage));
+    const page = new CRMDashboardPage(authedPage)
+    await page.goto()
+    await use(page)
   },
 
   customersPage: async ({ authedPage }: AppDeps, use: (r: CRMCustomerPage) => Promise<void>) => {
