@@ -9,7 +9,6 @@ setup('Tạo User và Login', async ({ page }) => {
   await page.fill('#user-name', 'standard_user');
   await page.fill('#password', 'secret_sauce');
   await page.click('#login-button');
-  await page.pause();
   // Kiểm tra login thành công
   await expect(page).toHaveURL(/inventory/);
 

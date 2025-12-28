@@ -4,7 +4,7 @@ import { test, expect } from '@playwright/test';
 
 test.use({
   video: {
-    mode: 'retain-on-failure',
+    mode: 'on-first-retry',
     size: { width: 1280, height: 720 },
   },
   headless: false,

@@ -16,7 +16,9 @@ export const auth = base.extend<AuthFixtures>({
   // --- TẦNG 1: Trang Login thuần túy ---
 
   loginPage: async ({ page }, use) => {
-    await use(new CRMLoginPage(page));
+    const loginPage = new CRMLoginPage(page);
+    await loginPage.goto();
+    await use(loginPage);
   },
 
   // --- TẦNG 2: GATEKEEPER (Người Gác Cổng) ---

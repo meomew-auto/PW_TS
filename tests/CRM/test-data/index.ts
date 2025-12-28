@@ -1,5 +1,6 @@
 import customers from './customers.json' assert { type: 'json' };
 import customersDev from './customers-dev.json' assert { type: 'json' };
+import loginCases from './login-cases.json' assert { type: 'json' };
 
 function loadDataByEnv<T>(base: T, dev: T): T {
   // Lấy environment từ process.env (có sẵn trong Node.js/Playwright)
@@ -23,6 +24,7 @@ type DataEntry = {
 
 export const dataSchemas = {
   customers,
+  loginCases,
   // orders,
   // products,
 } as const;
@@ -31,6 +33,7 @@ export type DataSchemas = typeof dataSchemas;
 
 export const testDataCatalog = {
   customers: loadDataByEnv(customers, customersDev), //  Tự động load theo môi trường
+  loginCases, // Login cases không cần load theo env
   // orders: loadDataByEnv(orders, ordersDev, ordersUat, ordersProd),
   // products: loadDataByEnv(products, productsDev, productsUat, productsProd),
 } as const;

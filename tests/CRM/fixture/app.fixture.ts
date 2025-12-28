@@ -7,6 +7,7 @@ import { CRMCustomerPage } from '../pom/CRMCustomerPage';
 import { CRMNewCustomerPage } from '../pom/CRMNewCustomerPage';
 
 // 1. MENU
+// Lưu ý: loginPage đã có trong AuthFixtures, không cần thêm ở đây
 export type AppFixtures = {
   dashboardPage: CRMDashboardPage;
   customersPage: CRMCustomerPage;
@@ -40,6 +41,7 @@ export const appFixtures = {
   
   // 👉 Ta định kiểu trực tiếp vào tham số ({ authedPage }: AppDeps)
   // TypeScript sẽ hiểu ngay mà không bắt bẻ khi merge
+  // Lưu ý: loginPage đã được định nghĩa trong auth.fixture.ts
   
   dashboardPage: async ({ authedPage }: AppDeps, use: (r: CRMDashboardPage) => Promise<void>) => {
     const page = new CRMDashboardPage(authedPage)
