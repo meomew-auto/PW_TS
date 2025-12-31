@@ -6,6 +6,7 @@ node_modules/
 /playwright-report/
 /blob-report/
 /playwright/.cache/
+.idea/
 
 # Auth state files (SENSITIVE - không commit!)
 /auth/
@@ -21,3 +22,7 @@ user.json
 # Environment files (local secrets)
 .env.local
 .env.*.local
+allure-report/
+allure-results/
+.history.jsonl
+allure-reports/

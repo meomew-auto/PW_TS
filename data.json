@@ -1,0 +1,260 @@
+{
+  "config": {
+    "configFile": "E:\\Khoa hoc\\PW_TS\\playwright.lessons.config.ts",
+    "rootDir": "E:/Khoa hoc/PW_TS/tests/lessons",
+    "forbidOnly": false,
+    "fullyParallel": true,
+    "globalSetup": null,
+    "globalTeardown": null,
+    "globalTimeout": 0,
+    "grep": {},
+    "grepInvert": null,
+    "maxFailures": 0,
+    "metadata": {
+      "actualWorkers": 1
+    },
+    "preserveOutput": "always",
+    "reporter": [
+      [
+        "E:\\Khoa hoc\\PW_TS\\custom.ts",
+        null
+      ],
+      [
+        "json",
+        {
+          "outputFile": "./data.json"
+        }
+      ],
+      [
+        "html",
+        null
+      ]
+    ],
+    "reportSlowTests": {
+      "max": 5,
+      "threshold": 300000
+    },
+    "quiet": false,
+    "projects": [
+      {
+        "outputDir": "E:/Khoa hoc/PW_TS/test-results",
+        "repeatEach": 1,
+        "retries": 1,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "id": "setup",
+        "name": "setup",
+        "testDir": "E:/Khoa hoc/PW_TS/tests/lessons",
+        "testIgnore": [],
+        "testMatch": [
+          "**/*.setup.ts"
+        ],
+        "timeout": 30000
+      },
+      {
+        "outputDir": "E:/Khoa hoc/PW_TS/test-results",
+        "repeatEach": 1,
+        "retries": 1,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "id": "cleanup",
+        "name": "cleanup",
+        "testDir": "E:/Khoa hoc/PW_TS/tests/lessons",
+        "testIgnore": [],
+        "testMatch": [
+          "**/*.teardown.ts"
+        ],
+        "timeout": 30000
+      },
+      {
+        "outputDir": "E:/Khoa hoc/PW_TS/test-results",
+        "repeatEach": 1,
+        "retries": 1,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "id": "chromium",
+        "name": "chromium",
+        "testDir": "E:/Khoa hoc/PW_TS/tests/lessons",
+        "testIgnore": [],
+        "testMatch": [
+          "**/*.@(spec|test).?(c|m)[jt]s?(x)"
+        ],
+        "timeout": 30000
+      }
+    ],
+    "shard": null,
+    "tags": [],
+    "updateSnapshots": "missing",
+    "updateSourceMethod": "patch",
+    "version": "1.57.0",
+    "workers": 2,
+    "webServer": null
+  },
+  "suites": [
+    {
+      "title": "auth.teardown.ts",
+      "file": "auth.teardown.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [
+        {
+          "title": "Dọn dẹp Database",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "cleanup",
+              "projectName": "cleanup",
+              "results": [
+                {
+                  "workerIndex": 2,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 1,
+                  "errors": [],
+                  "stdout": [
+                    {
+                      "text": "🔴 [TEARDOWN] 🧹 Đang xóa User khỏi Database...\n"
+                    },
+                    {
+                      "text": "🔴 [TEARDOWN] ✅ Dọn dẹp hoàn tất!\n"
+                    }
+                  ],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2025-12-30T13:35:55.143Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "5228e77054e433ae56aa-b7e7ab97a208311f2486",
+          "file": "auth.teardown.ts",
+          "line": 3,
+          "column": 1
+        }
+      ]
+    },
+    {
+      "title": "auth.setup.ts",
+      "file": "auth.setup.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [
+        {
+          "title": "Tạo User và Login",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "setup",
+              "projectName": "setup",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 804,
+                  "errors": [],
+                  "stdout": [
+                    {
+                      "text": "🟢 [SETUP] 1. Đang tạo User mới trong Database...\n"
+                    },
+                    {
+                      "text": "🟢 [SETUP] 2. Đang thực hiện Login...\n"
+                    },
+                    {
+                      "text": "🟢 [SETUP] ✅ Đã lưu cookie vào user.json\n"
+                    }
+                  ],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2025-12-30T13:35:51.737Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "17e3fe6f4d9d8bd79c6b-be34e3cdc521780523f0",
+          "file": "auth.setup.ts",
+          "line": 3,
+          "column": 1
+        }
+      ]
+    },
+    {
+      "title": "trace.spec.ts",
+      "file": "trace.spec.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [
+        {
+          "title": "Demo Trace on-first-retry: Fail lần 1, Pass lần 2",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chromium",
+              "projectName": "chromium",
+              "results": [
+                {
+                  "workerIndex": 1,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 1124,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "steps": [
+                    {
+                      "title": "1. Truy cập trang login",
+                      "duration": 345
+                    },
+                    {
+                      "title": "2. Điền thông tin",
+                      "duration": 418
+                    }
+                  ],
+                  "startTime": "2025-12-30T13:35:53.270Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "e3923cdec76100746450-c163170fbe5ce01022f0",
+          "file": "trace.spec.ts",
+          "line": 3,
+          "column": 1
+        }
+      ]
+    }
+  ],
+  "errors": [],
+  "stats": {
+    "startTime": "2025-12-30T13:35:51.209Z",
+    "duration": 3960.577,
+    "expected": 3,
+    "skipped": 0,
+    "unexpected": 0,
+    "flaky": 0
+  }
+}

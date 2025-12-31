@@ -33,10 +33,10 @@ export default defineConfig({
 
   /* Configure projects */
   projects: [
-    {
-      name: 'setup',
-      testMatch: '**/*.setup.ts',
-    },
+    // {
+    //   name: 'setup',
+    //   testMatch: '**/*.setup.ts',
+    // },
     {
       name: 'Start CRM',
       testMatch: '**/*.spec.ts',
@@ -44,7 +44,7 @@ export default defineConfig({
         ...devices['Desktop Chrome'],
         storageState: EnvManager.get('STORAGE_STATE_PATH')!,
       },
-      dependencies: ['setup'],
+      // dependencies: ['setup'],
     },
   ],
 });
