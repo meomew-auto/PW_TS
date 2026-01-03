@@ -123,7 +123,7 @@ class CustomReporter implements Reporter {
   private skipped = 0; // Số test SKIPPED
   private total = 0; // Tổng số test
   private current = 0; // Test đang chạy (thứ mấy)
-  private failures: { title: string; error: string }[] = []; // Danh sách test lỗi
+  private failures: { title: string; errors: string[] }[] = []; // Danh sách test lỗi (hỗ trợ nhiều lỗi cho soft assertions)
   private globalErrors: string[] = []; // Lỗi toàn cục (worker crash)
   private logs: Map<string, string[]> = new Map(); // Console logs theo test ID
   private currentTestId = ''; // ID của test đang chạy
@@ -224,9 +224,13 @@ class CustomReporter implements Reporter {
         this.failed++;
         status = `${c.bgRed}${c.bold} FAIL ${c.reset}`;
         // Lưu lại thông tin test fail để hiện ở cuối
+        // Dùng result.errors (mảng) thay vì result.error để hỗ trợ soft assertions
+        const allErrors = result.errors.map(
+          (err) => err.message?.split('\n')[0] || 'Unknown error'
+        );
         this.failures.push({
           title: `${file} > ${test.title}`,
-          error: result.error?.message?.split('\n')[0] || 'Unknown',
+          errors: allErrors.length > 0 ? allErrors : ['Unknown'],
         });
         break;
       case 'skipped':
@@ -328,15 +332,19 @@ class CustomReporter implements Reporter {
     console.log(`  ${c.gray}Duration:${c.reset} ${c.bold}${duration}${c.reset}`);
     console.log(`${c.cyan}${'='.repeat(65)}${c.reset}`);
 
-    // Liệt kê các test fail
+    // Liệt kê các test fail (hỗ trợ hiển thị nhiều lỗi cho soft assertions)
     if (this.failures.length > 0) {
       console.log('');
       console.log(`${c.red}${c.bold}FAILED TESTS:${c.reset}`);
       this.failures.forEach((t, i) => {
         console.log(`  ${c.red}${i + 1}. ${t.title}${c.reset}`);
-        console.log(
-          `     ${c.dim}${t.error.substring(0, 80)}${t.error.length > 80 ? '...' : ''}${c.reset}`
-        );
+        // Hiện tất cả errors (soft assertions có thể có nhiều lỗi)
+        t.errors.forEach((err, errIndex) => {
+          const prefix = t.errors.length > 1 ? `[${errIndex + 1}] ` : '';
+          console.log(
+            `     ${c.dim}${prefix}${err.substring(0, 75)}${err.length > 75 ? '...' : ''}${c.reset}`
+          );
+        });
       });
     }
 

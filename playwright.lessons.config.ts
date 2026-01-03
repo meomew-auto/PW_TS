@@ -18,8 +18,8 @@ export default defineConfig({
   retries: process.env.CI ? 2 : 0,
   workers: process.env.CI ? 1 : 2,
   reporter: [
-    ['allure-playwright'],
-    // ['./custom.ts'],
+    // ['allure-playwright'],
+    ['./custom.ts'],
     // [
     //   'json',
     //   {
@@ -61,6 +61,14 @@ export default defineConfig({
         storageState: './auth/user.json',
       },
       dependencies: ['setup'],
+    },
+    {
+      name: 'api',
+      use: {
+        browserName: undefined,
+        baseURL: 'https://jsonplaceholder.typicode.com',
+      },
+      testMatch: '/api/**/*.spec.ts',
     },
   ],
 });
