@@ -95,7 +95,7 @@ test('TC04. Pagination - kiểm tra limit trả về đúng số lượng', asyn
   const token = await getToken(request);
 
   const listRes = await request.get('/api/products', {
-    headers: { Authorization: `Bearer ${token}` },
+    headers: { Authorization: `Bearer ${token}`, 'X-request': 'ABC' },
     params: {
       page: 1,
       limit: 5,
@@ -151,6 +151,21 @@ test('TC06. Multipart form - upload file', async ({ request }) => {
 
   console.log(listBody.files?.[0].filename);
   console.log(listBody.files?.[1].filename);
+});
+
+test('TC07.Url encode', async ({ request }) => {
+  //   const token = await getToken(request);]]
+
+  const response = await request.post('/public/test/echo-urlencoded', {
+    form: {
+      userName: 'Nguyễn Văn B',
+      email: 'b@gmail.com',
+      message: 'abc',
+      password: 'P@ass word&123',
+    },
+  });
+  const resBody = await response.json();
+  console.log(resBody);
 });
 
 // bài tập về nhà
