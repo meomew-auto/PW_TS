@@ -8,3 +8,6 @@ test.describe('Products Service Test', () => {
     console.log('All products', response.data);
   });
 });
+// BTVN
+// viet TC02 get products voi pagination dựa vào productService
+//viet Tc03 get chi tiết 1 product
