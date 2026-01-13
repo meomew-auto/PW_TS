@@ -794,3 +794,9 @@ baseService
       "created_at": "2026-01-07T17:45:05Z",
       "updated_at": "2026-01-07T17:45:05Z"
     },
+
+
+
+    để thực hiện lưu token cho các bài test đối với API
+    chúng ta cần lưu trực tiếp vào file với phần trích xuất jwt - token
+    và sẽ xử lý đọc file đó để lấy token

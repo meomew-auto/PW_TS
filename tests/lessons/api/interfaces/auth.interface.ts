@@ -25,4 +25,5 @@ export interface AuthResponse {
     username: string;
   };
   expiresIn: string;
+  exiresAt: string;
 }

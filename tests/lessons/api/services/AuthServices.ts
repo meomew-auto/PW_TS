@@ -4,6 +4,12 @@ export class AuthService extends BaseService {
   private currentToken: string | null = null;
 
   async login(email: string, password: string): Promise<AuthResponse> {
+    //     const loginRes = await request.post('/auth/login', {
+    //   data: {
+    //     username: 'test1',
+    //     password: '123456789',
+    //   },
+    // });
     const response = await this.postRaw('/auth/login', {
       username: email,
       password: password,
@@ -19,6 +25,7 @@ export class AuthService extends BaseService {
       token,
       user: authData.user,
       expiresIn: authData.expires_in,
+      exiresAt: authData.expires_at,
     };
   }
 

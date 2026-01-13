@@ -71,12 +71,21 @@ export default defineConfig({
       testMatch: '/api/**/*.spec.ts',
     },
     {
+      name: 'neko-setup',
+      use: {
+        browserName: undefined,
+        baseURL: 'https://api-neko-coffee.autoneko.com',
+      },
+      testMatch: '/api/**/*.setup.ts',
+    },
+    {
       name: 'neko-api',
       use: {
         browserName: undefined,
         baseURL: 'https://api-neko-coffee.autoneko.com',
       },
       testMatch: '/api/**/*.spec.ts',
+      dependencies: ['neko-setup'],
     },
   ],
 });
