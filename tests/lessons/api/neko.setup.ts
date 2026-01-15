@@ -30,7 +30,7 @@ setup('Authentication Neko APi', async ({ request }) => {
   }
 
   const authService = new AuthService(request);
-  const response = await authService.login('test1', '123456789');
+  const response = await authService.login('test2', '123456789');
 
   expect(response.token).toBeTruthy();
 

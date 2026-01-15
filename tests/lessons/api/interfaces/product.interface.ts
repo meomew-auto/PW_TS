@@ -1,74 +1,102 @@
+export type ProductType = 'bean' | 'equipment' | 'accessory';
+
+export type RoastLevel = 'Light' | 'Medium' | 'Dark';
+
+export type UnitType = 'kg' | 'piece' | 'box';
+
+export interface FlavorProfile {
+  acidity: number;
+  bitterness: number;
+  sweetness: number;
+  floral: number;
+  notes: string[];
+}
+
+export interface BrewingGuide {
+  temperature: string;
+  ratio: string;
+  time: string;
+  method: string;
+}
+
+export interface BeanSpecifications {
+  region: string;
+  altitude: string;
+  processing: string;
+  grade?: string;
+  flavor_profile?: FlavorProfile;
+  grind_options?: string[];
+  weight_options?: number[];
+  brewing_guide?: BrewingGuide;
+}
+
+export interface EquipmentSpecifications {
+  brand: string;
+  model: string;
+  type?: string;
+  power?: string;
+  voltage?: string;
+  burr_type?: string;
+  grind_settings?: string;
+  capacity?: string;
+  features?: string[];
+  includes?: string[];
+  color_options?: string[];
+}
+
 export interface Product {
   id: number;
   name: string;
-  type: 'bean' | 'equipment' | 'accessory';
-  unit_type: 'kg' | 'piece' | 'box';
-  price_per_unit: number;
+  type: string;
+  unit_type?: string;
+  origin?: string;
   description?: string;
+  roast_level?: RoastLevel;
+  price_per_unit: number;
+  warranty_months?: number;
+  image_url?: string;
+  gallery?: string[];
+  specifications: BeanSpecifications | EquipmentSpecifications;
   is_active: boolean;
-  created_at?: string;
-  updated_at?: string;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface ProductCreate {
+  name: string;
+  type: ProductType;
+  price_per_unit: number;
+  unit_type?: UnitType;
+  origin?: string;
+  description?: string;
+  roast_level?: RoastLevel;
+  warranty_months?: number;
+  specifications: BeanSpecifications | EquipmentSpecifications;
+}
+
+export interface ProductUpdate extends ProductCreate {}
+
+export interface ProductPatch {
+  name?: string;
+  type?: ProductType;
+  price_per_unit?: number;
+  unit_type?: string;
+  origin?: string;
+  description?: string;
+  roast_level?: RoastLevel;
+  warranty_months?: number;
+  specifications?: BeanSpecifications | EquipmentSpecifications;
+  is_active?: boolean;
+}
+
+export interface Pagination {
+  page: number;
+  limit: number;
+  total_items: number;
+  total_pages: number;
 }
 
 export interface PaginationResponse<T> {
   data: T[];
-  pagination: {
-    page: number;
-    limit: number;
-    total_items: number;
-    total_pages: number;
-  };
+  pagination: Pagination;
 }
-
-// export interface ProductCreate {
-//     name:
-// }
-
-// kg
-// piece
-// box
-
-//  "data": [
-//     {
-//       "id": 30,
-//       "name": "AeroPress Original + Travel Kit",
-//       "type": "equipment",
-//       "unit_type": "piece",
-//       "description": "Bộ pha cà phê AeroPress Original kèm túi du lịch. Compact và versatile.",
-//       "price_per_unit": 950000,
-//       "warranty_months": 12,
-//       "specifications": {
-//         "brand": "AeroPress",
-//         "model": "Original",
-//         "brewing_methods": [
-//           "Standard",
-//           "Inverted",
-//           "Cold brew"
-//         ],
-//         "capacity": "1-3 cups",
-//         "brewing_time": "1-2 phút",
-//         "filter_type": "Micro paper filters",
-//         "origin": "USA",
-//         "features": [
-//           "BPA-free plastic",
-//           "Portable",
-//           "Easy cleanup",
-//           "350+ included filters"
-//         ],
-//         "includes": [
-//           "AeroPress",
-//           "Paddle",
-//           "Scoop",
-//           "Funnel",
-//           "Filter holder",
-//           "350 filters",
-//           "Tote bag"
-//         ],
-//         "color_options": [
-//           "Gray/Black"
-//         ]
-//       },
-//       "is_active": true,
-//       "created_at": "2026-01-07T17:45:05Z",
-//       "updated_at": "2026-01-07T17:45:05Z"
-//     },

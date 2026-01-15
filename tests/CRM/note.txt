@@ -800,3 +800,14 @@ baseService
     để thực hiện lưu token cho các bài test đối với API
     chúng ta cần lưu trực tiếp vào file với phần trích xuất jwt - token
     và sẽ xử lý đọc file đó để lấy token
+
+
+    Thì 
+    GET -> lấy dữ liệu
+    POST -> tạo mới dữ liệu
+    PUT/PATCH: bản chất là thay đổi thông tin của đối tượng đã có trong db
+    PUT: -> sẽ thay đổi toàn bộ thông tin của sản phẩm và yêu cầu phải đầy đủ body truyền lên
+    Nếu truyền thiếu thì trường đó mặc định sẽ trửo về null -> hoặc về default tùy nghiệp vụ
+    có nhưunxg trường required bắt buộc phải đẩy lên -> ví dụ nhưu tên sản phẩm 
+    PATCH: -> se thay đổi thông tin của sản phẩm theo body truyền lên mà ko ảnh hưởng tới các thông tin khác 
+    nghĩa là ta muón thay đổi gì thì ta truyền lên

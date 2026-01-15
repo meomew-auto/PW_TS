@@ -32,7 +32,7 @@ export default defineConfig({
         printSteps: true,
       },
     ],
-    // ['html'],
+    ['html'],
   ],
 
   use: {
