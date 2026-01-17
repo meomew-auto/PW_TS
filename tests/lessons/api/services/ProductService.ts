@@ -39,4 +39,13 @@ export class ProductService extends BaseService {
   async deleteProduct(id: number): Promise<void> {
     await this.delete(`${this.basePath}/${id}`);
   }
+
+  // async uploadImage(
+  //   productId: number,
+  //   imageFile: { name: string; mimeType: string; buffer: Buffer },
+  //   baseUrl?: string
+  // );
 }
+
+//service luuw trữ ảnh. S3. (AWS), tự host dùng minIO
+// public cái endpoint để upload cho chúng ta.

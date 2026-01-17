@@ -15,78 +15,78 @@ import { test, expect } from './fixtures/gatekeeper.api.fixture';
 //Zod validation
 //
 // ý tưởng là mình sẽ tạo ra 1 sản phẩm chỉ dành riêng để PUT và PATCH -> dùng xong xóa luôn
-// test.describe('Product Service Test - PUT và PATCH', () => {
-//   let testProductId: number;
+test.describe('Product Service Test - PUT và PATCH', () => {
+  let testProductId: number;
 
-//   test.beforeEach(async ({ productService }) => {
-//     const product = await productService.createProduct({
-//       name: `Test PUT - PATCH ${Date.now()}`,
-//       type: 'bean',
-//       price_per_unit: 20000,
-//       unit_type: 'kg',
-//       specifications: {
-//         region: 'Bani Mattar',
-//         altitude: '2,000 - 2,400m',
-//         processing: 'Natural (Dried on rooftops)',
-//         grade: 'Mattari',
-//         flavor_profile: {
-//           acidity: 7.0,
-//           bitterness: 4.0,
-//           sweetness: 7.5,
-//           floral: 5.0,
-//           notes: ['Rượu vang đỏ', 'Sô-cô-la', 'Gia vị', 'Nho khô'],
-//         },
-//         grind_options: ['whole', 'filter'],
-//         weight_options: [100, 250],
-//       },
-//     });
+  test.beforeEach(async ({ productService }) => {
+    const product = await productService.createProduct({
+      name: `Test PUT - PATCH ${Date.now()}`,
+      type: 'bean',
+      price_per_unit: 20000,
+      unit_type: 'kg',
+      specifications: {
+        region: 'Bani Mattar',
+        altitude: '2,000 - 2,400m',
+        processing: 'Natural (Dried on rooftops)',
+        grade: 'Mattari',
+        flavor_profile: {
+          acidity: 7.0,
+          bitterness: 4.0,
+          sweetness: 7.5,
+          floral: 5.0,
+          notes: ['Rượu vang đỏ', 'Sô-cô-la', 'Gia vị', 'Nho khô'],
+        },
+        grind_options: ['whole', 'filter'],
+        weight_options: [100, 250],
+      },
+    });
 
-//     testProductId = product.id;
-//     console.log('Created test product', testProductId);
-//   });
+    testProductId = product.id;
+    console.log('Created test product', testProductId);
+  });
 
-//   test.afterEach(async ({ productService }) => {
-//     if (testProductId) {
-//       await productService.deleteProduct(testProductId);
-//       console.log('Deleted test product');
-//     }
-//   });
+  test.afterEach(async ({ productService }) => {
+    if (testProductId) {
+      await productService.deleteProduct(testProductId);
+      console.log('Deleted test product');
+    }
+  });
 
-//   test('TC01. Cập nhật toàn bộ product (đầy đủ required field)', async ({ productService }) => {
-//     const updatedProduct = await productService.updateProduct(testProductId, {
-//       name: `PUT updated ${Date.now()}`,
-//       type: 'bean',
-//       price_per_unit: 60000,
-//       unit_type: 'kg',
-//       specifications: {
-//         region: 'Bani Mattar',
-//         altitude: '2,000 - 2,400m',
-//         processing: 'Natural (Dried on rooftops)',
-//         grade: 'Mattari',
-//         flavor_profile: {
-//           acidity: 7.0,
-//           bitterness: 4.0,
-//           sweetness: 7.5,
-//           floral: 5.0,
-//           notes: ['Rượu vang đỏ', 'Sô-cô-la', 'Gia vị', 'Nho khô'],
-//         },
-//         grind_options: ['whole', 'filter'],
-//         weight_options: [100, 250],
-//       },
-//     });
+  test('TC01. Cập nhật toàn bộ product (đầy đủ required field)', async ({ productService }) => {
+    const updatedProduct = await productService.updateProduct(testProductId, {
+      name: `PUT updated ${Date.now()}`,
+      type: 'bean',
+      price_per_unit: 60000,
+      unit_type: 'kg',
+      specifications: {
+        region: 'Bani Mattar',
+        altitude: '2,000 - 2,400m',
+        processing: 'Natural (Dried on rooftops)',
+        grade: 'Mattari',
+        flavor_profile: {
+          acidity: 7.0,
+          bitterness: 4.0,
+          sweetness: 7.5,
+          floral: 5.0,
+          notes: ['Rượu vang đỏ', 'Sô-cô-la', 'Gia vị', 'Nho khô'],
+        },
+        grind_options: ['whole', 'filter'],
+        weight_options: [100, 250],
+      },
+    });
 
-//     expect(updatedProduct.id).toBe(testProductId);
-//     expect(updatedProduct.price_per_unit).toBe(60000);
-//   });
+    expect(updatedProduct.id).toBe(testProductId);
+    expect(updatedProduct.price_per_unit).toBe(60000);
+  });
 
-//   test('TC02. Cập nhật giá sản phẩm qua PATCH', async ({ productService }) => {
-//     const patched = await productService.pactchProduct(testProductId, {
-//       name: 'PATCH 123',
-//     });
-//     expect(patched.name).toBe('PATCH 123');
-//     // expect(patched.price_per_unit).toBe(500000000);
-//   });
-// });
+  test('TC02. Cập nhật giá sản phẩm qua PATCH', async ({ productService }) => {
+    const patched = await productService.pactchProduct(testProductId, {
+      name: 'PATCH 123',
+    });
+    expect(patched.name).toBe('PATCH 123');
+    // expect(patched.price_per_unit).toBe(500000000);
+  });
+});
 
 //race condition nghĩa là 1 sảnphaamr vừa bị put và patch tác động
 
