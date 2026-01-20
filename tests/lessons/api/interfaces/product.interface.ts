@@ -103,6 +103,6 @@ export interface PaginationResponse<T> {
 
 export interface ImageUploadResponse {
   image_url: string;
-  thumbnail_url: string;
-  message: string;
+  thumbnail_url?: string;
+  message?: string;
 }

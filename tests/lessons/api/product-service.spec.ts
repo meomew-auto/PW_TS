@@ -1,3 +1,4 @@
+import { loadFromFolder } from './file-upload.util';
 import { test, expect } from './fixtures/gatekeeper.api.fixture';
 
 // test.describe('Products Service Test', () => {
@@ -85,6 +86,17 @@ test.describe('Product Service Test - PUT và PATCH', () => {
     });
     expect(patched.name).toBe('PATCH 123');
     // expect(patched.price_per_unit).toBe(500000000);
+  });
+
+  test('TC03. Upload ảnh cho sản phẩm', async ({ productService }) => {
+    const list = await productService.getProducts({ limit: 1 });
+    const productId = list.data[0].id;
+
+    const imageFile = loadFromFolder('2.jpg', 'files');
+    const UPLOAD_SERVER = 'https://uploads-neko-coffee.autoneko.com';
+    const result = await productService.uploadImage(productId, imageFile, UPLOAD_SERVER);
+    console.log(result.message);
+    console.log(result.image_url);
   });
 });
 

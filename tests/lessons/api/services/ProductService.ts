@@ -1,5 +1,6 @@
 import { BaseService } from './BaseService';
 import {
+  ImageUploadResponse,
   PaginationResponse,
   Product,
   ProductCreate,
@@ -40,12 +41,18 @@ export class ProductService extends BaseService {
     await this.delete(`${this.basePath}/${id}`);
   }
 
-  // async uploadImage(
-  //   productId: number,
-  //   imageFile: { name: string; mimeType: string; buffer: Buffer },
-  //   baseUrl?: string
-  // );
+  async uploadImage(
+    productId: number,
+    imageFile: { name: string; mimeType: string; buffer: Buffer },
+    baseUrl?: string
+  ): Promise<ImageUploadResponse> {
+    return this.post<ImageUploadResponse>(`${this.basePath}/${productId}/image`, undefined, {
+      multipart: { image: imageFile },
+      baseURL: baseUrl,
+    });
+  }
 }
 
 //service luuw trữ ảnh. S3. (AWS), tự host dùng minIO
 // public cái endpoint để upload cho chúng ta.
+// https://uploads-neko-coffee.autoneko.com/api/products/1/image

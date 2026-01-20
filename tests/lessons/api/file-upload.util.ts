@@ -43,7 +43,7 @@ export function loadFromFolder(fileName: string, folder?: string): MultipartFile
   // path.join('a', 'b') -> a/b
 
   // path.resolve('a', 'b') -> /fulpath/to/a/b (trả về absolute path)
-
+  // files\2.jpg
   //   => chuyển thành absolute path . xử lý  "\" và "/"
   const filePath = path.isAbsolute(targetFolder)
     ? path.join(targetFolder, fileName)
