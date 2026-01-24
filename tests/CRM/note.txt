@@ -861,3 +861,14 @@ có 1 action -> chúng ta phải đặt event trước action
 thì tab với windows tương tự
 page.waitforEvent('popup') -> popup windows
 page.waitforEvent('page') -> tab
+
+KHi test permission , multi role. -> người ta cũng sẽ defined ra rất nhiều role và rất nhiều permission
+
+làm ma trận phân quyền
+    staff manager admin
+C    Y 
+R    N
+U    N
+D    Y
+
+authen và author
