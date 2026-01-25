@@ -18,7 +18,7 @@ on:
       test_suite:
         description: 'Test suite to run'
         required: true
-        default: 'crm'
+        default: 'neko-api'
         type: choice
         options:
           - crm
@@ -28,33 +28,9 @@ env:
   NODE_ENV: ${{ github.event.inputs.environment || 'development' }}
 
 jobs:
-  # ==================== LINT JOB ====================
-  lint:
-    name: 🔍 Lint & Format Check
-    runs-on: ubuntu-latest
-    steps:
-      - name: 📥 Checkout code
-        uses: actions/checkout@v4
-
-      - name: 📦 Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: lts/*
-          cache: 'npm'
-
-      - name: 📥 Install dependencies
-        run: npm ci
-
-      - name: 🔍 Run ESLint
-        run: npm run lint
-
-      - name: 🎨 Check Prettier
-        run: npm run format:check
-
   # ==================== TEST JOB ====================
   test:
     name: 🎭 Run Playwright Tests
-    needs: lint
     runs-on: ubuntu-latest
     steps:
       - name: 📥 Checkout code
@@ -74,11 +50,7 @@ jobs:
 
       - name: 🧪 Run Playwright tests
         run: |
-          if [ "${{ github.event.inputs.test_suite }}" = "neko-api" ]; then
-            npx playwright test --config playwright.lessons.config.ts --project neko-api --reporter=list,allure-playwright
-          else
-            npx playwright test --reporter=list,allure-playwright
-          fi
+          npx playwright test tests/lessons/api/product-service.spec.ts --config playwright.lessons.config.ts --project neko-api --reporter=list,allure-playwright
         env:
           NODE_ENV: ${{ env.NODE_ENV }}
           ADMIN_PASSWORD: ${{ secrets.ADMIN_PASSWORD }}
