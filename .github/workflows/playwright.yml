@@ -62,7 +62,7 @@ jobs:
 
       - name: 🧪 Run Playwright tests
         run: |
-          npx playwright test tests/lessons/api/product-service.spec.ts --config playwright.lessons.config.ts --project neko-api --reporter=list,allure-playwright
+          npx playwright test tests/lessons/api/product-service.spec.ts --config playwright.lessons.config.ts --project neko-api --reporter=list,html,allure-playwright
         env:
           NODE_ENV: ${{ env.NODE_ENV }}
           ADMIN_PASSWORD: ${{ secrets.ADMIN_PASSWORD }}
@@ -148,27 +148,80 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           name: allure-report
-          path: ./allure-report
+          path: ./site/allure
+
+      - name: 📥 Download Playwright Report
+        uses: actions/download-artifact@v4
+        continue-on-error: true
+        with:
+          name: playwright-report
+          path: ./site/playwright
 
       - name: 📦 Setup Pages
         uses: actions/configure-pages@v4
         with:
           enablement: true
 
-      - name: 🔍 Check Allure Report Structure
-        id: check-report
+      - name: � Create Index Page
         run: |
-          if [ -d "./allure-report/awesome" ]; then
-            echo "path=./allure-report/awesome" >> $GITHUB_OUTPUT
+          # Find actual allure report path (may have /awesome subfolder)
+          if [ -d "./site/allure/awesome" ]; then
+            ALLURE_PATH="allure/awesome"
           else
-            echo "path=./allure-report" >> $GITHUB_OUTPUT
+            ALLURE_PATH="allure"
           fi
+          
+          cat > ./site/index.html << 'EOF'
+          <!DOCTYPE html>
+          <html lang="en">
+          <head>
+            <meta charset="UTF-8">
+            <meta name="viewport" content="width=device-width, initial-scale=1.0">
+            <title>Test Reports</title>
+            <style>
+              body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%); min-height: 100vh; display: flex; align-items: center; justify-content: center; margin: 0; }
+              .container { text-align: center; }
+              h1 { color: #fff; font-size: 2.5rem; margin-bottom: 2rem; }
+              .cards { display: flex; gap: 2rem; flex-wrap: wrap; justify-content: center; }
+              .card { background: rgba(255,255,255,0.1); backdrop-filter: blur(10px); border-radius: 16px; padding: 2rem; width: 280px; text-decoration: none; color: #fff; transition: transform 0.3s, box-shadow 0.3s; border: 1px solid rgba(255,255,255,0.1); }
+              .card:hover { transform: translateY(-8px); box-shadow: 0 20px 40px rgba(0,0,0,0.3); }
+              .card h2 { margin: 0 0 0.5rem; font-size: 1.5rem; }
+              .card p { opacity: 0.7; margin: 0; font-size: 0.9rem; }
+              .icon { font-size: 3rem; margin-bottom: 1rem; }
+            </style>
+          </head>
+          <body>
+            <div class="container">
+              <h1>🎭 Test Reports</h1>
+              <div class="cards">
+                <a href="ALLURE_PATH_PLACEHOLDER/index.html" class="card">
+                  <div class="icon">📊</div>
+                  <h2>Allure Report</h2>
+                  <p>Detailed test results with history trends</p>
+                </a>
+                <a href="playwright/index.html" class="card">
+                  <div class="icon">🎬</div>
+                  <h2>Playwright Report</h2>
+                  <p>Native Playwright HTML report with traces</p>
+                </a>
+              </div>
+            </div>
+          </body>
+          </html>
+          EOF
+          
+          # Replace placeholder with actual path
+          sed -i "s|ALLURE_PATH_PLACEHOLDER|$ALLURE_PATH|g" ./site/index.html
+          
+          echo "Site structure:"
+          ls -la ./site/
 
       - name: 📤 Upload Pages artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          path: ${{ steps.check-report.outputs.path }}
+          path: ./site
 
       - name: 🚀 Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4
+
