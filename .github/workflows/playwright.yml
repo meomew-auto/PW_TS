@@ -88,7 +88,7 @@ jobs:
   deploy-report:
     name: 🚀 Deploy Allure to GitHub Pages
     needs: test
-    if: always() && github.ref == 'refs/heads/main'
+    if: always() && (github.ref == 'refs/heads/main' || github.ref == 'refs/heads/feature/ci')
     runs-on: ubuntu-latest
     permissions:
       pages: write
