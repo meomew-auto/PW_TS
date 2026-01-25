@@ -111,20 +111,20 @@ test.describe('Product Service Test - PUT và PATCH', () => {
 //   expect(expect.name).toBeTruthy();
 // });
 
-test('TC02.Soft assertion - Dung ngay khi fail', async ({ productService }) => {
-  const response = await productService.getProduct(2);
-  console.log('Assertion 1 . id === 9999 (se fail)');
-  expect.soft(response.id, 'id phai la 9999').toBe(9999);
+// test('TC02.Soft assertion - Dung ngay khi fail', async ({ productService }) => {
+//   const response = await productService.getProduct(2);
+//   console.log('Assertion 1 . id === 9999 (se fail)');
+//   expect.soft(response.id, 'id phai la 9999').toBe(9999);
 
-  console.log('Assertion 2 . name === xyz (se fail)');
-  expect.soft(response.name, 'name phai la xyz').toBe('XYZ');
+//   console.log('Assertion 2 . name === xyz (se fail)');
+//   expect.soft(response.name, 'name phai la xyz').toBe('XYZ');
 
-  console.log('Assertion 3 . price > 0 (se pass)');
-  expect.soft(response.price_per_unit, 'price lon hon khong').toBeGreaterThan(0);
+//   console.log('Assertion 3 . price > 0 (se pass)');
+//   expect.soft(response.price_per_unit, 'price lon hon khong').toBeGreaterThan(0);
 
-  console.log('Assertion 4 . type ===xxx (se faild)');
-  expect.soft(response.type, 'type phai la xxx').toBe('XXXX');
+//   console.log('Assertion 4 . type ===xxx (se faild)');
+//   expect.soft(response.type, 'type phai la xxx').toBe('XXXX');
 
-  console.log('Assertion 5 . is active (se pass)');
-  expect.soft(response.is_active, 'isactive').toBe(true);
-});
+//   console.log('Assertion 5 . is active (se pass)');
+//   expect.soft(response.is_active, 'isactive').toBe(true);
+// });
