@@ -68,19 +68,18 @@ jobs:
           ADMIN_PASSWORD: ${{ secrets.ADMIN_PASSWORD }}
 
       - name: 📥 Download Previous History
-        uses: dawidd6/action-download-artifact@v6
         continue-on-error: true
-        with:
-          workflow: playwright.yml
-          name: allure-history
-          path: .
-          search_artifacts: true
-          if_no_artifact_found: ignore
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          echo "Attempting to download previous history artifact..."
+          gh run download --name allure-history --dir . 2>/dev/null && echo "Downloaded!" || echo "No previous history found (first run)"
+          ls -la ./history.jsonl 2>/dev/null || echo "history.jsonl not found"
 
       - name: 🔍 Debug History Status
         run: |
           echo "Looking for history.jsonl..."
-          ls -la ./history.jsonl 2>/dev/null && echo "Found!" || echo "Not found - first run"
+          ls -la ./history.jsonl 2>/dev/null && cat ./history.jsonl | head -c 200 || echo "Not found - will create new"
 
       - name: 📊 Generate Allure Report
         if: always()
