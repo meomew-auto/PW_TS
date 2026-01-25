@@ -12,8 +12,23 @@ on:
   pull_request:
     branches: [main, master]
 
-  # Cho phép chạy thủ công từ GitHub UI
+  # Cho phép chạy thủ công từ GitHub UI với các options
   workflow_dispatch:
+    inputs:
+      environment:
+        description: 'Môi trường test'
+        required: true
+        default: 'development'
+        type: choice
+        options:
+          - development
+          - staging
+          - production
+      test_file:
+        description: 'File test (để trống = chạy tất cả)'
+        required: false
+        default: ''
+        type: string
 
 # ============================================
 # DANH SÁCH JOBS (CÔNG VIỆC)
