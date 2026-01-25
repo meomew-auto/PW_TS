@@ -67,10 +67,26 @@ jobs:
           NODE_ENV: ${{ env.NODE_ENV }}
           ADMIN_PASSWORD: ${{ secrets.ADMIN_PASSWORD }}
 
+      - name: 🗄️ Restore Allure History
+        uses: actions/cache@v4
+        with:
+          path: ./history.jsonl
+          key: allure-history-${{ github.ref_name }}
+          restore-keys: |
+            allure-history-${{ github.ref_name }}
+            allure-history-main
+
       - name: 📊 Generate Allure Report
         if: always()
         run: |
           npx allure awesome ./allure-results --output ./allure-report --history-path ./history.jsonl
+
+      - name: 🗄️ Save Allure History
+        uses: actions/cache/save@v4
+        if: always()
+        with:
+          path: ./history.jsonl
+          key: allure-history-${{ github.ref_name }}-${{ github.run_id }}
 
       - name: 📤 Upload Playwright Report
         uses: actions/upload-artifact@v4
