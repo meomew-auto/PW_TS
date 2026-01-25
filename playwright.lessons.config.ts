@@ -76,7 +76,7 @@ export default defineConfig({
         browserName: undefined,
         baseURL: 'https://api-neko-coffee.autoneko.com',
       },
-      testMatch: '/api/**/*.setup.ts',
+      testMatch: '/api/**/neko.setup.ts',
     },
     {
       name: 'neko-api',

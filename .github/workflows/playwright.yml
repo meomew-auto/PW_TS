@@ -1,27 +1,59 @@
 name: Playwright Tests
+
+# ============================================
+# KHI NÀO WORKFLOW NÀY CHẠY?
+# ============================================
 on:
+  # Chạy khi push code lên main/master
   push:
-    branches: [ main, master ]
+    branches: [main, master]
+
+  # Chạy khi tạo Pull Request vào main/master
   pull_request:
-    branches: [ main, master ]
+    branches: [main, master]
+
+  # Cho phép chạy thủ công từ GitHub UI
+  workflow_dispatch:
+
+# ============================================
+# DANH SÁCH JOBS (CÔNG VIỆC)
+# ============================================
 jobs:
+  # Job chính: Chạy test
   test:
-    timeout-minutes: 60
-    runs-on: ubuntu-latest
+    name: 🎭 Run Playwright Tests
+    runs-on: ubuntu-latest    # Chạy trên máy ảo Ubuntu
+    timeout-minutes: 30       # Timeout sau 30 phút
+
     steps:
-    - uses: actions/checkout@v4
-    - uses: actions/setup-node@v4
-      with:
-        node-version: lts/*
-    - name: Install dependencies
-      run: npm ci
-    - name: Install Playwright Browsers
-      run: npx playwright install --with-deps
-    - name: Run Playwright tests
-      run: npx playwright test
-    - uses: actions/upload-artifact@v4
-      if: ${{ !cancelled() }}
-      with:
-        name: playwright-report
-        path: playwright-report/
-        retention-days: 30
+      # Bước 1: Checkout code từ repository
+      - name: 📥 Checkout code
+        uses: actions/checkout@v4
+
+      # Bước 2: Cài Node.js
+      - name: 📦 Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: lts/*      # Dùng phiên bản LTS mới nhất
+          cache: 'npm'             # Cache npm dependencies
+
+      # Bước 3: Cài dependencies từ package.json
+      - name: 📥 Install dependencies
+        run: npm ci
+
+      # Bước 4: Cài Playwright browsers
+      - name: 🎭 Install Playwright Browsers
+        run: npx playwright test tests/lessons/api/product-service.spec.ts --config playwright.lessons.config.ts --project neko-api
+
+      # Bước 5: Chạy test!
+      - name: 🧪 Run Playwright tests
+        run: npx playwright test
+
+      # Bước 6: Upload report (luôn chạy, kể cả khi test fail)
+      - name: 📤 Upload Playwright Report
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: playwright-report
+          path: playwright-report/
+          retention-days: 30       # Giữ 30 ngày
