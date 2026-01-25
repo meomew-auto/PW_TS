@@ -120,10 +120,19 @@ jobs:
         with:
           enablement: true
 
+      - name: 🔍 Check Allure Report Structure
+        id: check-report
+        run: |
+          if [ -d "./allure-report/awesome" ]; then
+            echo "path=./allure-report/awesome" >> $GITHUB_OUTPUT
+          else
+            echo "path=./allure-report" >> $GITHUB_OUTPUT
+          fi
+
       - name: 📤 Upload Pages artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          path: ./allure-report/awesome
+          path: ${{ steps.check-report.outputs.path }}
 
       - name: 🚀 Deploy to GitHub Pages
         id: deployment
