@@ -73,8 +73,14 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
-          echo "Attempting to download previous history artifact..."
-          gh run download --name allure-history --dir . 2>/dev/null && echo "Downloaded!" || echo "No previous history found (first run)"
+          echo "Finding previous run with history artifact..."
+          PREV_RUN=$(gh run list --workflow=playwright.yml --status=completed --limit=5 --json databaseId -q '.[0].databaseId')
+          echo "Previous run ID: $PREV_RUN"
+          if [ -n "$PREV_RUN" ]; then
+            gh run download $PREV_RUN --name allure-history --dir . 2>/dev/null && echo "Downloaded from run $PREV_RUN!" || echo "No history artifact in run $PREV_RUN"
+          else
+            echo "No previous completed runs found"
+          fi
           ls -la ./history.jsonl 2>/dev/null || echo "history.jsonl not found"
 
       - name: 🔍 Debug History Status
