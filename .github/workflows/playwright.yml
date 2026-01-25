@@ -67,36 +67,38 @@ jobs:
           NODE_ENV: ${{ env.NODE_ENV }}
           ADMIN_PASSWORD: ${{ secrets.ADMIN_PASSWORD }}
 
-      - name: 🗄️ Restore Allure History
-        id: allure-cache
-        uses: actions/cache/restore@v4
+      - name: 📥 Download Previous History
+        uses: dawidd6/action-download-artifact@v6
+        continue-on-error: true
         with:
-          path: ./history.jsonl
-          key: allure-history-${{ github.run_number }}
-          restore-keys: |
-            allure-history-
+          workflow: playwright.yml
+          name: allure-history
+          path: .
+          search_artifacts: true
+          if_no_artifact_found: ignore
 
-      - name: 🔍 Debug Cache Status
+      - name: 🔍 Debug History Status
         run: |
-          echo "Cache hit: ${{ steps.allure-cache.outputs.cache-hit }}"
-          echo "Cache key matched: ${{ steps.allure-cache.outputs.cache-matched-key }}"
-          ls -la ./history.jsonl 2>/dev/null || echo "No history file found after restore"
+          echo "Looking for history.jsonl..."
+          ls -la ./history.jsonl 2>/dev/null && echo "Found!" || echo "Not found - first run"
 
       - name: 📊 Generate Allure Report
         if: always()
         run: |
           echo "History file before generate:"
-          cat ./history.jsonl 2>/dev/null || echo "No history file yet"
+          cat ./history.jsonl 2>/dev/null || echo "No history file yet (first run)"
           npx allure awesome ./allure-results --output ./allure-report --history-path ./history.jsonl
           echo "History file after generate:"
-          wc -l ./history.jsonl 2>/dev/null || echo "History file not created"
+          cat ./history.jsonl 2>/dev/null | head -c 500 || echo "History file not created"
 
-      - name: 🗄️ Save Allure History
-        uses: actions/cache/save@v4
+      - name: 📤 Upload Allure History
+        uses: actions/upload-artifact@v4
         if: always()
         with:
+          name: allure-history
           path: ./history.jsonl
-          key: allure-history-${{ github.run_number }}
+          retention-days: 90
+          overwrite: true
 
       - name: 📤 Upload Playwright Report
         uses: actions/upload-artifact@v4
