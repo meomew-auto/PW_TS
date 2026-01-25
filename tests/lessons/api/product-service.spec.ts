@@ -84,7 +84,7 @@ test.describe('Product Service Test - PUT và PATCH', () => {
     const patched = await productService.pactchProduct(testProductId, {
       name: 'PATCH 123',
     });
-    expect(patched.name).toBe('PATCH21');
+    expect(patched.name).toBe('PATCH21221');
     // expect(patched.price_per_unit).toBe(500000000);
   });
 
