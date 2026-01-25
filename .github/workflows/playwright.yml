@@ -72,9 +72,15 @@ jobs:
         uses: actions/cache/restore@v4
         with:
           path: ./history.jsonl
-          key: allure-history-${{ github.ref_name }}-dummy
+          key: allure-history-${{ github.run_number }}
           restore-keys: |
-            allure-history-${{ github.ref_name }}-
+            allure-history-
+
+      - name: 🔍 Debug Cache Status
+        run: |
+          echo "Cache hit: ${{ steps.allure-cache.outputs.cache-hit }}"
+          echo "Cache key matched: ${{ steps.allure-cache.outputs.cache-matched-key }}"
+          ls -la ./history.jsonl 2>/dev/null || echo "No history file found after restore"
 
       - name: 📊 Generate Allure Report
         if: always()
@@ -83,14 +89,14 @@ jobs:
           cat ./history.jsonl 2>/dev/null || echo "No history file yet"
           npx allure awesome ./allure-results --output ./allure-report --history-path ./history.jsonl
           echo "History file after generate:"
-          cat ./history.jsonl 2>/dev/null || echo "History file not created"
+          wc -l ./history.jsonl 2>/dev/null || echo "History file not created"
 
       - name: 🗄️ Save Allure History
         uses: actions/cache/save@v4
         if: always()
         with:
           path: ./history.jsonl
-          key: allure-history-${{ github.ref_name }}-${{ github.run_number }}
+          key: allure-history-${{ github.run_number }}
 
       - name: 📤 Upload Playwright Report
         uses: actions/upload-artifact@v4
