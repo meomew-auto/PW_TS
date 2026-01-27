@@ -872,3 +872,22 @@ U    N
 D    Y
 
 authen và author
+
+SELECT * FROM PRODUCT ORDER BY ID DESC LIMIT 10
+
+
+/// Với UI
+Browser sự tự động capture : storageStage *Trạng thái đăng nhập khi mình khai báo ở dependencies project
+
+
+1. User điền form -> click login
+->
+2. Browser sẽ gửi request xxuoosng server
+->
+3. Server sẽ trả về:
+  - Set-Cookie: session=abbc123, httOnly --> cookie
+  - Respont-body: {access_token: "abc"}
+
+
+
+

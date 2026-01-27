@@ -2,32 +2,10 @@ import { test as setup, expect } from '@playwright/test';
 import fs from 'fs';
 import path from 'path';
 import { AuthService } from './services/AuthServices';
-
-const authFile = path.resolve('auth/neko-token.json');
-
-function isTokenValidByExpiresAt(exiresAt: string): boolean {
-  if (!exiresAt) return false;
-  const expiry = new Date(exiresAt).getTime();
-
-  const now = Date.now();
-  const bufferTime = 5 * 60 * 1000;
-  return expiry > now + bufferTime;
-}
+import { getStorageStatePath } from '../../utils/auth.utils';
 
 setup('Authentication Neko APi', async ({ request }) => {
-  if (fs.existsSync(authFile)) {
-    const data = JSON.parse(fs.readFileSync(authFile, 'utf-8'));
-
-    const isValid = data.expires_at ? isTokenValidByExpiresAt(data.expires_at) : false;
-
-    if (data.token && isValid) {
-      console.log('Token còn hạn, skip login');
-      return;
-    }
-    console.log('Token hết hạn, Login lại');
-
-    //logic check token đã tồn tại . ok -> thì bỏ qua luôn ko cần login lại
-  }
+  const adminStoragePath = getStorageStatePath('admin');
 
   const authService = new AuthService(request);
   const response = await authService.login('admin', 'Admin@123');
