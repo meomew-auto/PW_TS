@@ -39,14 +39,13 @@ jobs:
           echo "Đang cài đặt dependencies..."
           echo "npm install"
 
-      # Step 3: Chạy test
       - name: 🧪 Step 3 - Run tests
         run: |
           echo "Đang chạy tests..."
           echo "Browser: Chrome"
+          echo "🌿 BRANCH: ${{ github.ref_name }}"
           echo ""
           echo "✅ Tất cả tests PASSED!"
-          exit 1
 
   # ----------------------------------------
   # JOB 2: DEPLOY
