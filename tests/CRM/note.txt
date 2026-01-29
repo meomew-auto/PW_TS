@@ -891,3 +891,19 @@ Browser sự tự động capture : storageStage *Trạng thái đăng nhập kh
 
 
 
+// db
+//nhiều cách để call db (rất nhiều thư viện hỗ trợ -> mình sẽ viết thành viết base sql (khởi tạo connection, quản lý config, pool, room...)
+-> call xuống tầng repo), transaction, commit, rollback... -> fixture hết 
+thì sẽ chia thành tầng model  (bảng, cột) ORM mapping từ database thành các class của typescript
+tầng repository -> mình sẽ khai báo các câu query với db (slect, update, insert, delete.... kết nối với thằng model)
+tầng service -> bao gồm các business logic (ví dụ lấy toàn bộ thông tin học sinh theo lớp, khối....... sẽ gọi reposuitory)
+tầng controller (bao gồm endpoint api và kết nối -> service )
+
+-> fixture kết nối hết tất cả service -> dùng gọi DI (inject tất cả service -> fixture)
+-< bài test gọi fixture bình thường thay vì gọi services...
+
+
+API : clean
+UI : clean 
+=> API + UI  = clean
+

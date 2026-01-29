@@ -112,6 +112,16 @@ export default defineConfig({
         baseURL: 'https://coffee.autoneko.com',
       },
     },
+    {
+      name: 'neko-combined',
+      testMatch: '/specs/*.spec.ts',
+      dependencies: ['neko-setup'],
+      use: {
+        ...devices['Desktop Chrome'],
+        baseURL: 'https://coffee.autoneko.com',
+        storageState: './auth/admin.json',
+      },
+    },
   ],
 });
 

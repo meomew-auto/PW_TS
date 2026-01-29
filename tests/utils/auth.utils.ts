@@ -30,7 +30,7 @@ export function decodeJWT(token: string): Record<string, unknown> | null {
   }
 }
 
-function isTokenValidByJWT(token: string): boolean {
+export function isTokenValidByJWT(token: string): boolean {
   const payload = decodeJWT(token);
 
   const expiry = payload?.exp ? (payload.exp as number) * 1000 : null;
@@ -50,7 +50,26 @@ export function isStorageStateValid(filePath: string): boolean {
   if (!fs.existsSync(filePath)) return false;
 
   try {
-  } catch {}
+    const data = JSON.parse(fs.readFileSync(filePath, 'utf-8'));
+
+    const localStorage = data.origins?.[0]?.localStorage as Array<{ name: string; value: string }>;
+    if (!localStorage) return false;
+
+    const nekoAuthItem = localStorage.find((item) => item.name === 'neko_auth');
+    if (!nekoAuthItem) return false;
+
+    const nekoAuthString = nekoAuthItem.value;
+
+    const nekoAuth = JSON.parse(nekoAuthString);
+    const expireAt = nekoAuth.state.expireAt;
+
+    if (!expireAt) return false;
+
+    const bufferMs = AUTH_CONFIG.BUFFER_MINUTES * 60 * 1000;
+    return expireAt > bufferMs + Date.now();
+  } catch {
+    return false;
+  }
 }
 
 export function createStorageSateNekoAuth(
@@ -74,15 +93,15 @@ export function createStorageSateNekoAuth(
       user,
       accessToken,
       refreshToken: refreshToken || '',
-      expireAt: expireAtMs,
-      isisAuthenticated: true,
+      expiresAt: expireAtMs,
+      isAuthenticated: true,
     },
     version: 0,
   });
 
   return {
     cookies: [],
-    origin: [
+    origins: [
       {
         origin: AUTH_CONFIG.UI_ORIGIN,
         localStorage: [
@@ -177,4 +196,18 @@ export function saveTokenFile(
       2
     )
   );
+}
+
+export function loadTokenFile(): {
+  token: string;
+  refresh_token?: string;
+  expires_at?: string;
+} | null {
+  const filePath = getTokenFilePath();
+  if (!fs.existsSync(filePath)) return null;
+  try {
+    return JSON.parse(fs.readFileSync(filePath, 'utf-8'));
+  } catch {
+    return null;
+  }
 }

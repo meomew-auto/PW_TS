@@ -2,29 +2,34 @@ import { test as setup, expect } from '@playwright/test';
 import fs from 'fs';
 import path from 'path';
 import { AuthService } from './services/AuthServices';
-import { getStorageStatePath } from '../../utils/auth.utils';
+import {
+  getStorageStatePath,
+  loadTokenFile,
+  isTokenValidByJWT,
+  isStorageStateValid,
+  loginAndSaveStorageState,
+  saveTokenFile,
+} from '../../utils/auth.utils';
 
 setup('Authentication Neko APi', async ({ request }) => {
+  //file danh cho api
+  const tokenData = loadTokenFile();
+  //file danh cho UI
   const adminStoragePath = getStorageStatePath('admin');
 
-  const authService = new AuthService(request);
-  const response = await authService.login('admin', 'Admin@123');
-
-  expect(response.token).toBeTruthy();
-
-  const authDir = path.dirname(authFile);
-
-  if (!fs.existsSync(authDir)) {
-    fs.mkdirSync(authDir, { recursive: true });
+  if (
+    tokenData?.token &&
+    isTokenValidByJWT(tokenData.token) &&
+    isStorageStateValid(adminStoragePath)
+  ) {
+    console.log(`Token còn hạn, skip login`);
+    return;
   }
+  console.log('Login in admin');
+  const result = await loginAndSaveStorageState(request, 'admin');
+  expect(result.accessToken).toBeTruthy();
 
-  fs.writeFileSync(
-    authFile,
-    JSON.stringify({
-      token: response.token,
-      expires_at: response.exiresAt,
-    })
-  );
+  saveTokenFile(result.accessToken, result.refreshToken, result.expiresAt);
 });
 
 //logic
