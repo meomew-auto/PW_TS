@@ -1,46 +1,78 @@
-name: Demo Secrets vs Vars
-on: workflow_dispatch # Chạy bằng nút bấm tay cho nhanh
+# ============================================
+# WORKFLOW DEMO - CẤU TRÚC 2 JOBS
+# Job 1 fail → Job 2 KHÔNG chạy
+# ============================================
 
+name: Demo CI/CD Structure
+
+# 📌 TRIGGER - Khi nào chạy?
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:  # Cho phép chạy thủ công
+
+# 📌 BIẾN MÔI TRƯỜNG CHUNG
+env:
+  PROJECT_NAME: "Demo Project"
+
+# ============================================
+# DANH SÁCH JOBS
+# ============================================
 jobs:
-  debug:
+
+  # ----------------------------------------
+  # JOB 1: TEST
+  # ----------------------------------------
+  test:
+    name: 🧪 Job 1 - Chạy Tests
     runs-on: ubuntu-latest
+    timeout-minutes: 10
+
     steps:
-      # Bước 0: Checkout code (cần để có file TS)
-      - name: 📥 Checkout code
-        uses: actions/checkout@v4
+      # Step 1: Checkout code
+      - name: 📥 Step 1 - Checkout code
+        run: echo "Đang checkout code từ repository..."
 
-      # Bước 1: Cài Node.js
-      - name: � Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: '20'
-          cache: 'npm'
+      # Step 2: Cài đặt dependencies
+      - name: 📦 Step 2 - Install dependencies
+        run: |
+          echo "Đang cài đặt dependencies..."
+          echo "npm install"
 
-      # Bước 2: Cài dependencies
-      - name: 📦 Install dependencies
-        run: npm ci
+      # Step 3: Chạy test
+      - name: 🧪 Step 3 - Run tests
+        run: |
+          echo "Đang chạy tests..."
+          echo "Browser: Chrome"
+          echo ""
+          echo "✅ Tất cả tests PASSED!"
+          exit 1
 
-      # Bước 3: Demo hiển thị trực tiếp
-      - name: 🔍 So sánh hiển thị Secrets vs Vars
+  # ----------------------------------------
+  # JOB 2: DEPLOY
+  # ⚠️ CHỈ CHẠY KHI JOB 1 THÀNH CÔNG
+  # ----------------------------------------
+  deploy:
+    name: 🚀 Job 2 - Deploy
+    runs-on: ubuntu-latest
+    needs: test  # ← Chờ job "test" hoàn thành
+
+    steps:
+      - name: 🏗️ Step 1 - Build project
+        run: echo "Đang build project..."
+
+      - name: 🚀 Step 2 - Deploy lên server
+        run: |
+          echo "Đang deploy..."
+          echo "Project: ${{ env.PROJECT_NAME }}"
+          echo ""
+          echo "✅ Deploy thành công!"
+
+      - name: 📧 Step 3 - Thông báo hoàn tất
         run: |
           echo "=========================================="
-          echo "📌 DEMO: SECRETS vs VARIABLES"
+          echo "🎉 WORKFLOW HOÀN TẤT!"
           echo "=========================================="
-          echo ""
-          echo "1. Đọc Variables (Công khai):"
-          echo "   MY_WEBSITE = ${{ vars.MY_WEBSITE }}"
-          echo ""
-          echo "2. Đọc Secrets (Bí mật - GitHub tự che):"
-          echo "   MY_PASSWORD = ${{ secrets.MY_PASSWORD }}"
-          echo ""
+          echo "Người trigger: ${{ github.actor }}"
+          echo "Branch: ${{ github.ref_name }}"
           echo "=========================================="
-
-      # Bước 4: Chạy file TypeScript để đọc ENV
-      - name: 🚀 Chạy file TypeScript đọc ENV
-        run: npx tsx tests/lessons/print-env.ts
-        env:
-          # Truyền từ GitHub Secrets/Vars vào biến môi trường
-          # Bên trái: Tên biến mà code TS sẽ đọc
-          # Bên phải: Nguồn dữ liệu từ GitHub
-          MY_PASSWORD: ${{ secrets.MY_PASSWORD }}
-          MY_WEBSITE: ${{ vars.MY_WEBSITE }}
