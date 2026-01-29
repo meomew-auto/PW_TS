@@ -31,4 +31,5 @@ jobs:
           echo "📝 Commit: ${{ github.sha }}"
           echo ""
           echo "=========================================="
- 
+      - name: Kiểm tra thư mục hiện tại
+        run: ls -la
