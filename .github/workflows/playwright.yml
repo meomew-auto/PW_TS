@@ -1,74 +1,34 @@
-name: Playwright Tests
+# ============================================
+# WORKFLOW ĐƠN GIẢN NHẤT - DEMO CHO HỌC SINH
+# ============================================
 
-# ============================================
-# KHI NÀO WORKFLOW NÀY CHẠY?
-# ============================================
+name: Demo CI
+
+# Khi nào chạy?
 on:
-  # Chạy khi push code lên main/master
   push:
-    branches: [main, master]
-
-  # Chạy khi tạo Pull Request vào main/master
+    branches: [main]
   pull_request:
-    branches: [main, master]
+    branches: [main]
 
-  # Cho phép chạy thủ công từ GitHub UI với các options
-  workflow_dispatch:
-    inputs:
-      environment:
-        description: 'Môi trường test'
-        required: true
-        default: 'development'
-        type: choice
-        options:
-          - development
-          - staging
-          - production
-      test_file:
-        description: 'File test (để trống = chạy tất cả)'
-        required: false
-        default: ''
-        type: string
-
-# ============================================
-# DANH SÁCH JOBS (CÔNG VIỆC)
-# ============================================
+# Danh sách jobs
 jobs:
-  # Job chính: Chạy test
-  test:
-    name: 🎭 Run Playwright Tests
-    runs-on: ubuntu-latest    # Chạy trên máy ảo Ubuntu
-    timeout-minutes: 30       # Timeout sau 30 phút
+  hello:
+    name: 👋 Chào mừng
+    runs-on: ubuntu-latest
 
     steps:
-      # Bước 1: Checkout code từ repository
-      - name: 📥 Checkout code
-        uses: actions/checkout@v4
-
-      # Bước 2: Cài Node.js
-      - name: 📦 Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: lts/*      # Dùng phiên bản LTS mới nhất
-          cache: 'npm'             # Cache npm dependencies
-
-      # Bước 3: Cài dependencies từ package.json
-      - name: 📥 Install dependencies
-        run: npm ci
-
-      # Bước 4: Cài Playwright browsers
-      - name: 🎭 Install Playwright Browsers
-        run: npx playwright test tests/lessons/api/product-service.spec.ts --config playwright.lessons.config.ts --project neko-api
-
-      # Bước 5: Chạy test!
-      - name: 🧪 Run Playwright tests
-        run: npx playwright test
-
-      # Bước 6: Upload report (luôn chạy, kể cả khi test fail)
-      - name: 📤 Upload Playwright Report
-        uses: actions/upload-artifact@v4
-        if: always()
-        with:
-          name: playwright-report
-          path: playwright-report/
-          retention-days: 30       # Giữ 30 ngày
+      - name: 🎉 In ra thông báo
+        run: |
+          echo "=========================================="
+          echo "🚀 Workflow đã chạy thành công!"
+          echo "=========================================="
+          echo ""
+          echo "📅 Thời gian: $(date)"
+          echo "👤 Người push: ${{ github.actor }}"
+          echo "� Repository: ${{ github.repository }}"
+          echo "🌿 Branch: ${{ github.ref_name }}"
+          echo "📝 Commit: ${{ github.sha }}"
+          echo ""
+          echo "=========================================="
+ 
