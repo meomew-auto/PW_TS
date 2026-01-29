@@ -5,12 +5,42 @@ jobs:
   debug:
     runs-on: ubuntu-latest
     steps:
-      - name: So sánh hiển thị
+      # Bước 0: Checkout code (cần để có file TS)
+      - name: 📥 Checkout code
+        uses: actions/checkout@v4
+
+      # Bước 1: Cài Node.js
+      - name: � Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      # Bước 2: Cài dependencies
+      - name: 📦 Install dependencies
+        run: npm ci
+
+      # Bước 3: Demo hiển thị trực tiếp
+      - name: 🔍 So sánh hiển thị Secrets vs Vars
         run: |
+          echo "=========================================="
+          echo "📌 DEMO: SECRETS vs VARIABLES"
+          echo "=========================================="
+          echo ""
           echo "1. Đọc Variables (Công khai):"
-          echo "Website là: ${{ vars.MY_WEBSITE }}"
-          
-          echo "--------------------------------"
-          
-          echo "2. Đọc Secrets (Bí mật):"
-          echo "Mật khẩu là: ${{ secrets.MY_PASSWORD }}"
+          echo "   MY_WEBSITE = ${{ vars.MY_WEBSITE }}"
+          echo ""
+          echo "2. Đọc Secrets (Bí mật - GitHub tự che):"
+          echo "   MY_PASSWORD = ${{ secrets.MY_PASSWORD }}"
+          echo ""
+          echo "=========================================="
+
+      # Bước 4: Chạy file TypeScript để đọc ENV
+      - name: 🚀 Chạy file TypeScript đọc ENV
+        run: npx tsx tests/lessons/print-env.ts
+        env:
+          # Truyền từ GitHub Secrets/Vars vào biến môi trường
+          # Bên trái: Tên biến mà code TS sẽ đọc
+          # Bên phải: Nguồn dữ liệu từ GitHub
+          MY_PASSWORD: ${{ secrets.MY_PASSWORD }}
+          MY_WEBSITE: ${{ vars.MY_WEBSITE }}
