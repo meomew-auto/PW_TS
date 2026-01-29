@@ -1,103 +1,16 @@
-# ============================================
-# WORKFLOW DEMO - GIẢI THÍCH CẤU TRÚC GITHUB ACTIONS
-# ============================================
+name: Demo Secrets vs Vars
+on: workflow_dispatch # Chạy bằng nút bấm tay cho nhanh
 
-# 📌 TÊN WORKFLOW - Hiển thị trên tab Actions của GitHub
-name: Demo CI/CD Workflow
-
-# 📌 TRIGGER - Khi nào workflow chạy?
-on:
-  push:
-    branches: [main]           # Chạy khi push vào main
-  pull_request:
-    branches: [main]           # Chạy khi tạo PR vào main
-  workflow_dispatch:           # Cho phép chạy thủ công từ UI
-
-# 📌 BIẾN MÔI TRƯỜNG CHUNG - Dùng cho tất cả jobs
-env:
-  PROJECT_NAME: "Demo Project"
-  NODE_VERSION: "20"
-
-# ============================================
-# DANH SÁCH JOBS - Các công việc cần thực hiện
-# ============================================
 jobs:
-
-  # ----------------------------------------
-  # JOB 1: TEST - Chạy kiểm thử
-  # ----------------------------------------
-  test:
-    name: 🧪 Chạy Tests
-    runs-on: ubuntu-latest     # Máy ảo để chạy job
-    timeout-minutes: 10        # Tối đa 10 phút
-
-    # MATRIX STRATEGY - Chạy trên nhiều cấu hình
-    strategy:
-      fail-fast: false         # Nếu 1 config fail, vẫn chạy tiếp
-      matrix:
-        browser: [chrome, firefox, webkit]  # 3 browsers
-        # Sẽ tạo 3 jobs song song: chrome, firefox, webkit
-
-    steps:
-      # Step 1: Checkout code từ repo
-      - name: 📥 Checkout code
-        run: echo "Bước 1 - Đang checkout code từ repository..."
-
-      # Step 2: Cài đặt dependencies
-      - name: � Cài đặt dependencies
-        run: |
-          echo "Bước 2 - Cài đặt dependencies..."
-          echo "  → npm install"
-          echo "  → Cài browser: ${{ matrix.browser }}"
-
-      # Step 3: Chạy test
-      - name: 🧪 Chạy test trên ${{ matrix.browser }}
-        run: |
-          echo "Bước 3 - Chạy test..."
-          echo "  → Browser: ${{ matrix.browser }}"
-          echo "  → Project: ${{ env.PROJECT_NAME }}"
-          echo "  → Node version: ${{ env.NODE_VERSION }}"
-          echo ""
-          echo "✅ Test passed trên ${{ matrix.browser }}!"
-
-      # Step 4: Upload kết quả test
-      - name: 📊 Upload kết quả
-        run: |
-          echo "Bước 4 - Upload test results..."
-          echo "  → Artifact: test-results-${{ matrix.browser }}"
-
-  # ----------------------------------------
-  # JOB 2: DEPLOY - Triển khai lên server
-  # ----------------------------------------
-  deploy:
-    name: 🚀 Deploy
+  debug:
     runs-on: ubuntu-latest
-    needs: test                # ⚠️ CHỜ JOB "test" HOÀN THÀNH MỚI CHẠY
-
     steps:
-      - name: 📥 Download artifacts
-        run: echo "Bước 1 - Download kết quả test từ Job 1..."
-
-      - name: �️ Build project
+      - name: So sánh hiển thị
         run: |
-          echo "Bước 2 - Build project..."
-          echo "  → npm run build"
-
-      - name: 🚀 Deploy lên server
-        run: |
-          echo "Bước 3 - Đang deploy..."
-          echo "  → Server: production"
-          echo "  → Project: ${{ env.PROJECT_NAME }}"
-          echo ""
-          echo "✅ Deploy thành công!"
-
-      - name: 📧 Thông báo hoàn tất
-        run: |
-          echo "=========================================="
-          echo "🎉 WORKFLOW HOÀN TẤT!"
-          echo "=========================================="
-          echo "📅 Thời gian: $(date)"
-          echo "👤 Người trigger: ${{ github.actor }}"
-          echo "📦 Repository: ${{ github.repository }}"
-          echo "🌿 Branch: ${{ github.ref_name }}"
-          echo "=========================================="
+          echo "1. Đọc Variables (Công khai):"
+          echo "Website là: ${{ vars.MY_WEBSITE }}"
+          
+          echo "--------------------------------"
+          
+          echo "2. Đọc Secrets (Bí mật):"
+          echo "Mật khẩu là: ${{ secrets.MY_PASSWORD }}"
