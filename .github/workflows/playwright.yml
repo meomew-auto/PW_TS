@@ -1,6 +1,6 @@
 # ============================================
 # WORKFLOW DEMO - GITHUB ENVIRONMENTS
-# Chọn environment (dev/uat) từ dropdown
+# Dùng file TypeScript để in secrets/vars
 # ============================================
 
 name: Demo Environments
@@ -22,32 +22,26 @@ jobs:
     name: 🧪 Test trên ${{ inputs.environment }}
     runs-on: ubuntu-latest
     
-    # 📌 SỬ DỤNG ENVIRONMENT - sẽ lấy secrets/vars của env được chọn
+    # 📌 SỬ DỤNG ENVIRONMENT
     environment: ${{ inputs.environment }}
 
     steps:
-      - name: 📋 Thông tin chung
-        run: |
-          echo "=========================================="
-          echo "📌 THÔNG TIN WORKFLOW"
-          echo "=========================================="
-          echo "🌿 Branch: ${{ github.ref_name }}"
-          echo "🔧 Environment: ${{ inputs.environment }}"
-          echo "👤 Triggered by: ${{ github.actor }}"
-          echo "=========================================="
+      - name: � Checkout code
+        uses: actions/checkout@v4
 
-      - name: 🔐 In Secrets và Variables của Environment
-        run: |
-          echo ""
-          echo "🔒 SECRETS CỦA ENV '${{ inputs.environment }}':"
-          echo "   MY_PASSWORD: ${{ secrets.MY_PASSWORD }}"
-          echo ""
-          echo "🌐 VARIABLES CỦA ENV '${{ inputs.environment }}':"
-          echo "   MY_WEBSITE: ${{ vars.MY_WEBSITE }}"
-          echo ""
+      - name: 📦 Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
 
-      - name: ✅ Kết quả
-        run: |
-          echo "=========================================="
-          echo "✅ Test trên ${{ inputs.environment }} hoàn tất!"
-          echo "=========================================="
+      - name: � Install dependencies
+        run: npm ci
+
+      - name: � Chạy print-env.ts
+        run: npx tsx tests/lessons/print-env.ts
+        env:
+          # Truyền secrets/vars từ environment vào biến môi trường
+          MY_PASSWORD: ${{ secrets.MY_PASSWORD }}
+          MY_WEBSITE: ${{ vars.MY_WEBSITE }}
+          ENVIRONMENT: ${{ inputs.environment }}
