@@ -24,8 +24,8 @@ jobs:
     name: 🧪 Test trên ${{ inputs.environment }}
     runs-on: ubuntu-latest
     
-    # 📌 SỬ DỤNG ENVIRONMENT
-    environment: ${{ inputs.environment }}
+    # 📌 SỬ DỤNG ENVIRONMENT (mặc định 'dev' nếu push trigger)
+    environment: ${{ inputs.environment || 'dev' }}
 
     steps:
       - name: � Checkout code
@@ -46,4 +46,4 @@ jobs:
           # Truyền secrets/vars từ environment vào biến môi trường
           MY_PASSWORD: ${{ secrets.MY_PASSWORD }}
           MY_WEBSITE: ${{ vars.MY_WEBSITE }}
-          ENVIRONMENT: ${{ inputs.environment }}
+          ENVIRONMENT: ${{ inputs.environment || 'dev' }}
