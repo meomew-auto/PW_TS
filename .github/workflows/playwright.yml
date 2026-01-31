@@ -1,78 +1,16 @@
-# ============================================
-# WORKFLOW DEMO - CẤU TRÚC 2 JOBS
-# Job 1 fail → Job 2 KHÔNG chạy
-# ============================================
+name: Demo CI
 
-name: Demo CI/CD Structure
-
-# 📌 TRIGGER - Khi nào chạy?
 on:
   push:
     branches: [main]
-  workflow_dispatch:  # Cho phép chạy thủ công
 
-# 📌 BIẾN MÔI TRƯỜNG CHUNG
-env:
-  PROJECT_NAME: "Demo Project"
-
-# ============================================
-# DANH SÁCH JOBS
-# ============================================
 jobs:
-
-  # ----------------------------------------
-  # JOB 1: TEST
-  # ----------------------------------------
-  test:
-    name: 🧪 Job 1 - Chạy Tests
+  hello:
+    name: Chào mừng
     runs-on: ubuntu-latest
-    timeout-minutes: 10
 
     steps:
-      # Step 1: Checkout code
-      - name: 📥 Step 1 - Checkout code
-        run: echo "Đang checkout code từ repository..."
-
-      # Step 2: Cài đặt dependencies
-      - name: 📦 Step 2 - Install dependencies
+      - name: In ra thông báo
         run: |
-          echo "Đang cài đặt dependencies..."
-          echo "npm install"
-
-      # Step 3: Chạy test
-      - name: 🧪 Step 3 - Run tests
-        run: |
-          echo "Đang chạy tests..."
-          echo "Browser: Chrome"
-          echo ""
-          echo "✅ Tất cả tests PASSED!"
-          exit 1
-
-  # ----------------------------------------
-  # JOB 2: DEPLOY
-  # ⚠️ CHỈ CHẠY KHI JOB 1 THÀNH CÔNG
-  # ----------------------------------------
-  deploy:
-    name: 🚀 Job 2 - Deploy
-    runs-on: ubuntu-latest
-    needs: test  # ← Chờ job "test" hoàn thành
-
-    steps:
-      - name: 🏗️ Step 1 - Build project
-        run: echo "Đang build project..."
-
-      - name: 🚀 Step 2 - Deploy lên server
-        run: |
-          echo "Đang deploy..."
-          echo "Project: ${{ env.PROJECT_NAME }}"
-          echo ""
-          echo "✅ Deploy thành công!"
-
-      - name: 📧 Step 3 - Thông báo hoàn tất
-        run: |
-          echo "=========================================="
-          echo "🎉 WORKFLOW HOÀN TẤT!"
-          echo "=========================================="
-          echo "Người trigger: ${{ github.actor }}"
-          echo "Branch: ${{ github.ref_name }}"
-          echo "=========================================="
+          echo "Xin chào đây là dòng đầu tiên"
+          echo "Xin chào bạn nhé!"
