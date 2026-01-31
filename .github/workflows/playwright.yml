@@ -6,6 +6,8 @@
 name: Demo Environments
 
 on:
+  push:
+    branches: [ 'feature/test-dispatch' ]
   workflow_dispatch:
     inputs:
       environment:
