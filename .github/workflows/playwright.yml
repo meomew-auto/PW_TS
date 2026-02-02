@@ -1,49 +1,76 @@
 # ============================================
-# WORKFLOW DEMO - GITHUB ENVIRONMENTS
-# Dùng file TypeScript để in secrets/vars
+# DEMO: THỨ TỰ OVERRIDE CỦA BIẾN MÔI TRƯỜNG
 # ============================================
 
-name: Demo Environments
+name: Demo ENV Override
 
 on:
-  push:
-    branches: [ 'feature/test-dispatch' ]
   workflow_dispatch:
     inputs:
       environment:
         description: 'Chọn môi trường'
-        required: true
-        default: 'dev'
         type: choice
-        options:
-          - dev
-          - uat
+        options: [dev, uat]
+        default: 'dev'
+
+# ============================================
+# CẤP ĐỘ 1: WORKFLOW ENV (Thấp nhất)
+# ============================================
+env:
+  MY_VAR: "workflow-level"
+  ONLY_WORKFLOW: "chỉ có ở workflow"
 
 jobs:
   test:
-    name: 🧪 Test trên ${{ inputs.environment }}
     runs-on: ubuntu-latest
+    environment: ${{ inputs.environment }}  # dev hoặc uat
     
-    # 📌 SỬ DỤNG ENVIRONMENT (mặc định 'dev' nếu push trigger)
-    environment: ${{ inputs.environment || 'dev' }}
+    # ============================================
+    # CẤP ĐỘ 2: JOB ENV (Override workflow)
+    # ============================================
+    env:
+      MY_VAR: "job-level"           # Override workflow
+      ONLY_JOB: "chỉ có ở job"
 
     steps:
-      - name: � Checkout code
-        uses: actions/checkout@v4
-
-      - name: 📦 Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: '20'
-          cache: 'npm'
-
-      - name: � Install dependencies
-        run: npm ci
-
-      - name: � Chạy print-env.ts
-        run: npx tsx tests/lessons/print-env.ts
+      - name: 📊 Xem tất cả biến
+        # ============================================
+        # CẤP ĐỘ 3: STEP ENV (Override job & workflow)
+        # ============================================
         env:
-          # Truyền secrets/vars từ environment vào biến môi trường
-          MY_PASSWORD: ${{ secrets.MY_PASSWORD }}
-          MY_WEBSITE: ${{ vars.MY_WEBSITE }}
-          ENVIRONMENT: ${{ inputs.environment || 'dev' }}
+          MY_VAR: "step-level"      # Override job & workflow
+          ONLY_STEP: "chỉ có ở step"
+          # Lấy từ GitHub Environment (dev/uat)
+          FROM_SECRET: ${{ secrets.MY_PASSWORD }}
+          FROM_VAR: ${{ vars.MY_WEBSITE }}
+        run: |
+          echo "=========================================="
+          echo "📌 KẾT QUẢ OVERRIDE"
+          echo "=========================================="
+          echo ""
+          echo "� MY_VAR (bị override qua 3 cấp):"
+          echo "   Giá trị cuối: $MY_VAR"        # step-level
+          echo ""
+          echo "📍 Biến chỉ có ở từng cấp:"
+          echo "   ONLY_WORKFLOW: $ONLY_WORKFLOW"
+          echo "   ONLY_JOB: $ONLY_JOB"
+          echo "   ONLY_STEP: $ONLY_STEP"
+          echo ""
+          echo "🔐 Từ GitHub Environment '${{ inputs.environment }}':"
+          echo "   FROM_SECRET: $FROM_SECRET"
+          echo "   FROM_VAR: $FROM_VAR"
+          echo ""
+          echo "=========================================="
+
+      - name: 📊 Step 2 - Không có step env
+        run: |
+          echo "=========================================="
+          echo "📌 STEP 2 (Không có step env)"
+          echo "=========================================="
+          echo ""
+          echo "MY_VAR: $MY_VAR"           # job-level (không bị step override)
+          echo "ONLY_WORKFLOW: $ONLY_WORKFLOW"
+          echo "ONLY_JOB: $ONLY_JOB"
+          echo "ONLY_STEP: $ONLY_STEP"     # Rỗng! (chỉ có ở step 1)
+          echo ""
+          echo "=========================================="
