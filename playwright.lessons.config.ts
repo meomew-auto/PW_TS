@@ -38,7 +38,7 @@ export default defineConfig({
   use: {
     baseURL: 'https://crm.anhtester.com',
     trace: 'on',
-    headless: false,
+    headless: true,
     video: 'on-first-retry',
     screenshot: 'only-on-failure',
   },
