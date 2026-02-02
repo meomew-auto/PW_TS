@@ -1,10 +1,13 @@
 # ============================================
-# DEMO: THỨ TỰ OVERRIDE CỦA BIẾN MÔI TRƯỜNG
+# WORKFLOW: CHẠY PLAYWRIGHT TESTS
+# Project: neko-combined
 # ============================================
 
-name: Demo ENV Override
+name: Playwright Tests
 
 on:
+  push:
+    branches: [main, 'feature/*']
   workflow_dispatch:
     inputs:
       environment:
@@ -13,64 +16,39 @@ on:
         options: [dev, uat]
         default: 'dev'
 
-# ============================================
-# CẤP ĐỘ 1: WORKFLOW ENV (Thấp nhất)
-# ============================================
-env:
-  MY_VAR: "workflow-level"
-  ONLY_WORKFLOW: "chỉ có ở workflow"
-
 jobs:
   test:
+    name: 🧪 Run Playwright Tests
     runs-on: ubuntu-latest
-    environment: ${{ inputs.environment }}  # dev hoặc uat
-    
-    # ============================================
-    # CẤP ĐỘ 2: JOB ENV (Override workflow)
-    # ============================================
-    env:
-      MY_VAR: "job-level"           # Override workflow
-      ONLY_JOB: "chỉ có ở job"
+    timeout-minutes: 30
+    environment: ${{ inputs.environment || 'dev' }}
 
     steps:
-      - name: 📊 Xem tất cả biến
-        # ============================================
-        # CẤP ĐỘ 3: STEP ENV (Override job & workflow)
-        # ============================================
-        env:
-          MY_VAR: "step-level"      # Override job & workflow
-          ONLY_STEP: "chỉ có ở step"
-          # Lấy từ GitHub Environment (dev/uat)
-          FROM_SECRET: ${{ secrets.MY_PASSWORD }}
-          FROM_VAR: ${{ vars.MY_WEBSITE }}
-        run: |
-          echo "=========================================="
-          echo "📌 KẾT QUẢ OVERRIDE"
-          echo "=========================================="
-          echo ""
-          echo "� MY_VAR (bị override qua 3 cấp):"
-          echo "   Giá trị cuối: $MY_VAR"        # step-level
-          echo ""
-          echo "📍 Biến chỉ có ở từng cấp:"
-          echo "   ONLY_WORKFLOW: $ONLY_WORKFLOW"
-          echo "   ONLY_JOB: $ONLY_JOB"
-          echo "   ONLY_STEP: $ONLY_STEP"
-          echo ""
-          echo "🔐 Từ GitHub Environment '${{ inputs.environment }}':"
-          echo "   FROM_SECRET: $FROM_SECRET"
-          echo "   FROM_VAR: $FROM_VAR"
-          echo ""
-          echo "=========================================="
+      - name: 📥 Checkout code
+        uses: actions/checkout@v4
 
-      - name: 📊 Step 2 - Không có step env
-        run: |
-          echo "=========================================="
-          echo "📌 STEP 2 (Không có step env)"
-          echo "=========================================="
-          echo ""
-          echo "MY_VAR: $MY_VAR"           # job-level (không bị step override)
-          echo "ONLY_WORKFLOW: $ONLY_WORKFLOW"
-          echo "ONLY_JOB: $ONLY_JOB"
-          echo "ONLY_STEP: $ONLY_STEP"     # Rỗng! (chỉ có ở step 1)
-          echo ""
-          echo "=========================================="
+      - name: 📦 Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: 📦 Install dependencies
+        run: npm ci
+
+      - name: 🎭 Install Playwright browsers
+        run: npx playwright install --with-deps chromium
+
+      - name: 🧪 Run tests
+        run: npx playwright test --config=playwright.lessons.config.ts --project=neko-combined tests/lessons/specs/api-ui-combo.spec.ts
+        env:
+          ADMIN_PASSWORD: ${{ secrets.MY_PASSWORD }}
+          BASE_URL: ${{ vars.MY_WEBSITE }}
+
+      - name: 📊 Upload test results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-report
+          path: playwright-report/
+          retention-days: 7
