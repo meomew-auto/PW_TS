@@ -118,7 +118,7 @@ export default defineConfig({
       dependencies: ['neko-setup'],
       use: {
         ...devices['Desktop Chrome'],
-        baseURL: 'https://coffee.autoneko.com',
+        baseURL: process.env.BASE_URL,
         storageState: './auth/admin.json',
       },
     },

@@ -13,6 +13,13 @@ on:
         type: choice
         options: [dev, uat]
         default: 'dev'
+      config:
+        description: 'Chọn config file'
+        type: choice
+        options:
+          - playwright.lessons.config.ts
+          - playwright.config.ts
+        default: 'playwright.lessons.config.ts'
 
 jobs:
   test:
@@ -24,6 +31,35 @@ jobs:
     steps:
       - name: 📥 Checkout code
         uses: actions/checkout@v4
+
+      # ============================================
+      # DEMO: $VAR vs $(command)
+      # ============================================
+      - name: 📌 Demo - Biến vs Lệnh Shell
+        env:
+          MY_NAME: "GitHub Actions"
+          MY_ENV: ${{ inputs.environment }}
+        run: |
+          echo "=========================================="
+          echo "1. BIẾN MÔI TRƯỜNG - \$VAR"
+          echo "=========================================="
+          echo "MY_NAME: $MY_NAME"           # Đọc biến env
+          echo "MY_ENV: $MY_ENV"             # Đọc biến env
+          echo "HOME: $HOME"                 # Biến hệ thống
+          echo ""
+          echo "=========================================="
+          echo "2. CHẠY LỆNH SHELL - \$(command)"
+          echo "=========================================="
+          echo "Thời gian: $(date)"          # Chạy lệnh date
+          echo "Thư mục: $(pwd)"             # Chạy lệnh pwd
+          echo "User: $(whoami)"             # Chạy lệnh whoami
+          echo "Files: $(ls | wc -l) files"  # Đếm files
+          echo ""
+          echo "=========================================="
+          echo "3. KẾT HỢP CẢ HAI"
+          echo "=========================================="
+          echo "Xin chào $MY_NAME lúc $(date +%H:%M:%S)"
+          echo "==========================================" 
 
       - name: 📦 Setup Node.js
         uses: actions/setup-node@v4
@@ -38,10 +74,11 @@ jobs:
         run: npx playwright install --with-deps chromium
 
       - name: 🧪 Run tests
-        run: npx playwright test --config=playwright.lessons.config.ts --project=neko-combined tests/lessons/specs/api-ui-combo.spec.ts
+        run: npx playwright test --config=${{ inputs.config }} --project=neko-combined tests/lessons/specs/api-ui-combo.spec.ts
         env:
           ADMIN_PASSWORD: ${{ secrets.MY_PASSWORD }}
-          BASE_URL: ${{ vars.MY_WEBSITE }}
+          BASE_URL: ${{ vars.BASE_URL }}
+
 
       - name: 📊 Upload test results
         if: always()
