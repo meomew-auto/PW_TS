@@ -19,26 +19,26 @@ export default defineConfig({
   workers: process.env.CI ? 1 : 2,
   reporter: [
     // ['allure-playwright'],
-    // ['./custom.ts'],
+    ['./custom.ts'],
     // [
     //   'json',
     //   {
     //     outputFile: './data.json',
     //   },
     // ],
-    [
-      'list',
-      {
-        printSteps: true,
-      },
-    ],
+    // [
+    //   'list',
+    //   {
+    //     printSteps: true,
+    //   },
+    // ],
     ['html'],
   ],
 
   use: {
     baseURL: 'https://crm.anhtester.com',
     trace: 'on',
-    headless: false,
+    headless: true,
     video: 'on-first-retry',
     screenshot: 'only-on-failure',
   },
