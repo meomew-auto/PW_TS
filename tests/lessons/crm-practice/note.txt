@@ -203,3 +203,22 @@ npx playwright test (filter)
 dấu "/" biểu thị cho folder
 2. tìm theo folder
 npx playwright test ui/
+
+
+
+bản chất khi chạy ci/cd là chúng ta sẽ sử dụng 1 con agent -> đóng vai trò như 1 cái máy tính
+để thực hiện chạy test hay code
+devops sẽ setup agent vào gitlab -> github cho chúng ta
+docker, hoặc k8s
+
+TestOps -> khi mọi người thành thạo auto  rồi
+pipeline: giống nhưu đường ống vận hành chu trình automation 
+1k testcase -> 5 phần mỗi phần 200 tcs
+
+biến môi trường ở github
+sẽ 3 cấp độ
+1. workflow -> nhỏ nhất
+2. job
+3. step -> lớn nhất
+
+sẽ có mức độ ưu tiên là tăng dần 

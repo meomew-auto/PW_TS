@@ -3,12 +3,16 @@ name: Demo CI
 on:
   workflow_dispatch:
 
+env:
+  MY_VAR: 'workflow'
+
 jobs:
+  env:
+    MY_VAR: 'jobs'
   test:
     name: Job 1 - Chạy test
     runs-on: ubuntu-latest
     timeout-minutes: 10
-
     steps:
       - name: Step 1 - Check out code
         run: echo "Đang checkout code từ repository...."
@@ -23,13 +27,6 @@ jobs:
         run: echo "npx playwright install-deps"
 
       - name: Step 5 - Chạy test
-        run: echo "npx playwright test"
-
-  deploy:
-    name: Job2 - deploy
-    runs-on: ubuntu-latest
-    needs: test
-
-    steps:
-      - name: Tạo report
-        run: echo "tạo report"
+        env:
+          MY_VAR: 'steps'
+        run: echo $MY_VAR
