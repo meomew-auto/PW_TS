@@ -18,20 +18,20 @@ export default defineConfig({
   retries: process.env.CI ? 2 : 0,
   workers: process.env.CI ? 1 : 2,
   reporter: [
-    ['allure-playwright'],
-    // ['./custom.ts'],
+    // ['allure-playwright'],
+    ['./custom.ts'],
     // [
     //   'json',
     //   {
     //     outputFile: './data.json',
     //   },
     // ],
-    [
-      'list',
-      {
-        printSteps: true,
-      },
-    ],
+    // [
+    //   'list',
+    //   {
+    //     printSteps: true,
+    //   },
+    // ],
     ['html'],
   ],
 
@@ -118,7 +118,7 @@ export default defineConfig({
       dependencies: ['neko-setup'],
       use: {
         ...devices['Desktop Chrome'],
-        baseURL: 'https://coffee.autoneko.com',
+        baseURL: process.env.BASE_URL || 'https://coffee.autoneko.com',
         storageState: './auth/admin.json',
       },
     },

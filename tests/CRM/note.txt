@@ -978,3 +978,16 @@ runner
 
 2. $() 0> chạy lệnh và lấy kết quả sử dụng ở unbuntu *hay linux bash shell
 
+// khi chạy test chúng ta sẽ quản lý theo môi trường dev hoặc uat 
+-> sẽ có secrect, vars phụ thuộc vào môi trường dev hay uat
+thì mình sẽ tạo enviroment trên github và bảo github quản lý môi trường cho chúng ta
+
+secret -> khai báo 1 lần đầu tiên duy nhất và sẽ không hiển thị lại lần sau khi update
+kkhi in ra màn hình nó sẽ tự động đc mask ********
+
+vars -> khai báo sửa thoải mái (public)
+
+khi lấy ra NGUYÊN TẮC là phải gán ngược lại vào 1 cái biến để truy cập
+
+ko có GUI *giao diện tương tác
+phải sửa headless: true
