@@ -24,9 +24,7 @@ jobs:
         run: echo "npm install"
 
       - name: Step 4 - Cài playwright browser
-        run: echo "npx playwright install-deps"
+        run: echo "Chào ${{github.actor}}, runner ${{runner.os}} bây giờ là $(date)"
 
       - name: Step 5 - Chạy test
-        env:
-          MY_VAR: 'steps'
-        run: echo $MY_VAR
+        run: echo "${{env.MY_VAR}}"

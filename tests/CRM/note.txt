@@ -954,3 +954,27 @@ giá cả: liên quan tới việc khởi tạo hệ điều hành
 minh sẽ đưa ra các chỉ dẫn qua câu lệnh command line cho thằng ubuntu chạy
 run là tổ hợp câu lệnh mà thằng github sẽ chạy trên ubutnu
 để in chữ ở trong giao diện ubuntu chúng ta sẽ dùng echo
+
+chạy được nhiều workflows -> các workflows có thể gọi tới nhau
+
+quy trình PRO(hay sử dụng): người ta hay dùng reportportal  (real time kết quả)
+
+biến môi trường
+
+khi mình muốn in 1 biến ở trong github yml file thiof có 2 cách
+
+1. ${{}} -> tìm và thay thế trước khi chạy () 
+-> dùng để lấy dữ liệu từ github (dữ liệu tĩnh ví dụ secret, inputs, tên nhánh, tên người chạy )
+
+dữ liệu tĩnh bao gồm.
+
+github *thông tin về workflow/repo
+job. trạng thái Job
+step. ouput từ step 
+secrets. -> github secret
+vars -> github variable
+runner
+
+
+2. $() 0> chạy lệnh và lấy kết quả sử dụng ở unbuntu *hay linux bash shell
+
