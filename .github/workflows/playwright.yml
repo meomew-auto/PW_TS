@@ -2,29 +2,37 @@ name: Demo CI
 
 on:
   workflow_dispatch:
+    inputs:
+      enviroment:
+        description: 'Chọn môi trường'
+        type: choice
+        options: [dev, uat]
+        default: 'dev'
 
 env:
   MY_VAR: 'workflow'
 
 jobs:
   test:
-    env:
-      MY_VAR: 'jobs'
     name: Job 1 - Chạy test
     runs-on: ubuntu-latest
     timeout-minutes: 10
+    enviroment: ${{ inputs.enviroment || 'dev'}}
     steps:
       - name: Step 1 - Check out code
-        run: echo "Đang checkout code từ repository...."
+        uses: actions/checkout@v4
 
       - name: Step 2 - Cài node.js
-        run: echo "Cài đặt nodejs"
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
 
       - name: Step 3 - Cài dependencies từ package.json
-        run: echo "npm install"
+        run: npm install
 
-      - name: Step 4 - Cài playwright browser
-        run: echo "Chào ${{github.actor}}, runner ${{runner.os}} bây giờ là $(date)"
-
-      - name: Step 5 - Chạy test
-        run: echo "${{env.MY_VAR}}"
+      - name: Step 4 - Chạy test để đọc env
+        run: npx tsx tests/lessons/print-env.ts
+        env:
+          MY_PASSWORD: ${{secrets.MY_PASSWORD}}
+          MY_WEBSITE: ${{vars.MY_WEBSITE}}
