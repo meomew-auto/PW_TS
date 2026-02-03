@@ -7,9 +7,9 @@ env:
   MY_VAR: 'workflow'
 
 jobs:
-  env:
-    MY_VAR: 'jobs'
   test:
+    env:
+      MY_VAR: 'jobs'
     name: Job 1 - Chạy test
     runs-on: ubuntu-latest
     timeout-minutes: 10
@@ -27,4 +27,6 @@ jobs:
         run: echo "npx playwright install-deps"
 
       - name: Step 5 - Chạy test
+        env:
+          MY_VAR: 'steps'
         run: echo $MY_VAR
