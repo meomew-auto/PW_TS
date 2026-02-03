@@ -3,7 +3,7 @@ name: Demo CI
 on:
   workflow_dispatch:
     inputs:
-      enviroment:
+      environment:
         description: 'Chọn môi trường'
         type: choice
         options: [dev, uat]
@@ -17,7 +17,8 @@ jobs:
     name: Job 1 - Chạy test
     runs-on: ubuntu-latest
     timeout-minutes: 10
-    enviroment: ${{ inputs.enviroment || 'dev'}}
+    environment: ${{ inputs.environment || 'dev' }}
+
     steps:
       - name: Step 1 - Check out code
         uses: actions/checkout@v4
