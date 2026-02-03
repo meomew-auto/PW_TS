@@ -27,6 +27,4 @@ jobs:
         run: echo "npx playwright install-deps"
 
       - name: Step 5 - Chạy test
-        env:
-          MY_VAR: 'steps'
         run: echo $MY_VAR
