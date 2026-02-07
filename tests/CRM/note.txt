@@ -991,3 +991,17 @@ khi lấy ra NGUYÊN TẮC là phải gán ngược lại vào 1 cái biến đ�
 
 ko có GUI *giao diện tương tác
 phải sửa headless: true
+
+
+SEO TOP 
+nghĩa là đẩy keyword liên quan tới trang web lên đầu search của google...
+
+
+
+//loc trang thai
+select.first()
+
+select.nth(1)
+
+page.locator('div').filer({hasText: 'Lọc trạng thái'}).locator('select')
+page.getByText('Lọc trạng thái).locator('xpath=following-sibling::select')

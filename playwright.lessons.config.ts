@@ -120,6 +120,7 @@ export default defineConfig({
         ...devices['Desktop Chrome'],
         baseURL: process.env.BASE_URL || 'https://coffee.autoneko.com',
         storageState: './auth/admin.json',
+        viewport: { width: 1280, height: 720 },
       },
     },
   ],

@@ -83,7 +83,7 @@ export function createStorageSateNekoAuth(
         id: jwtPayload.sub as number,
         username: jwtPayload.username as string,
         email: jwtPayload.email as string,
-        role: jwtPayload.roke as string,
+        role: jwtPayload.role as string,
       }
     : null;
 
