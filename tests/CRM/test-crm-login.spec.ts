@@ -33,15 +33,34 @@ test.use({ storageState: { cookies: [], origins: [] } });
 // Giai đoạn này chạy siêu nhanh, chỉ xử lý logic trên RAM để chia nhóm test
 
 console.log(`📦 [PARSE] Loading keys from testDataCatalog... (PID: ${process.pid})`);
-
+// loginCases là 1 OBJECT (không phải array), dạng:
+// {
+//   validLogin:    { description: "...", data: { email: "...", expectedResult: "success" } },
+//   emptyEmail:    { description: "...", data: { email: "",    expectedResult: "error" } },
+//   wrongPassword: { description: "...", data: { email: "...", expectedResult: "error" } },
+//   ...
+// }
 const loginCases = testDataCatalog.loginCases;
+
+// typeof loginCases → kiểu của object ở trên
+// keyof typeof loginCases → 'validLogin' | 'emptyEmail' | 'wrongPassword' | ...
+// → Đây là UNION TYPE của tất cả tên keys
 type LoginCaseKey = keyof typeof loginCases;
 
-// 1. Lấy toàn bộ Keys
+// Object.keys(loginCases) trả về ARRAY tên keys:
+// ['validLogin', 'emptyEmail', 'wrongPassword', ...]
+// Nhưng TypeScript chỉ biết nó là string[] (quá chung)
+// → Cast "as LoginCaseKey[]" để TypeScript biết đúng kiểu
 const allKeys = Object.keys(loginCases) as LoginCaseKey[];
 
-// 2. Chia nhóm Positive/Negative ngay lập tức (Static Logic)
-// Main Process dùng cái này để biết test nào thuộc Group nào
+// allKeys.filter() — lọc array, giữ lại elements thỏa điều kiện
+// loginCases[key] — truy cập object bằng key (giống loginCases.validLogin)
+// .data.expectedResult — đi sâu vào field trong entry
+//
+// Ví dụ với key = 'validLogin':
+//   loginCases['validLogin'].data.expectedResult → 'success' → GIỮ LẠI
+// Ví dụ với key = 'emptyEmail':
+//   loginCases['emptyEmail'].data.expectedResult → 'error'   → BỎ QUA
 const positiveKeys = allKeys.filter((key) => loginCases[key].data.expectedResult === 'success');
 const negativeKeys = allKeys.filter((key) => loginCases[key].data.expectedResult === 'error');
 
