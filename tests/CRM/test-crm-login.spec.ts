@@ -20,10 +20,9 @@
 //   //assert
 //   await dashboardPage.expectOnPage();
 // });
-
 import { test, expect } from './fixture/gatekeeper.fixture';
 // Import Helper và Data Catalog từ file index
-import { testDataCatalog } from './test-data';
+import { testDataCatalog, getTestDataSimple } from './test-data';
 
 // Reset storage để đảm bảo mỗi test chạy sạch sẽ
 test.use({ storageState: { cookies: [], origins: [] } });
@@ -56,11 +55,12 @@ console.log(`   👉 Found ${negativeKeys.length} negative cases.`);
 // --- GROUP 1: POSITIVE CASES (@smoke) ---
 test.describe('Login - Positive Cases', { tag: '@smoke' }, () => {
   for (const key of positiveKeys) {
-    // Lấy description để đặt tên Test (Chỉ lấy metadata, chưa clone data nặng)
-    const { description, data } = loginCases[key];
+    // Lấy description để đặt tên Test (parse-time, chỉ đọc metadata)
+    const { description } = loginCases[key];
 
     test(`${key}: ${description}`, async ({ page }) => {
-      // ======================================================
+      // Clone data mới tinh cho mỗi test run
+      const data = getTestDataSimple('loginCases', key);
 
       console.log(`▶️ Running Positive Case: ${key}`);
 
@@ -70,7 +70,7 @@ test.describe('Login - Positive Cases', { tag: '@smoke' }, () => {
       await page.getByRole('button', { name: 'Login' }).click();
 
       // Verify redirect (Ép kiểu nhẹ vì ta biết chắc chắn đây là success case)
-      await expect(page).toHaveURL(new RegExp((data as any).expectedUrl));
+      await expect(page).toHaveURL(new RegExp(data.expectedUrl));
     });
   }
 });
@@ -78,11 +78,12 @@ test.describe('Login - Positive Cases', { tag: '@smoke' }, () => {
 // --- GROUP 2: NEGATIVE CASES (@regression) ---
 test.describe('Login - Negative Cases', { tag: '@regression' }, () => {
   for (const key of negativeKeys) {
-    const { description, data } = loginCases[key];
+    // Lấy description để đặt tên Test (parse-time, chỉ đọc metadata)
+    const { description } = loginCases[key];
 
     test(`${key}: ${description}`, async ({ loginPage, page }) => {
-      // Clone data mới tinh
-      // const testData = getTestDataSimple('loginCases', key);
+      // Clone data mới tinh cho mỗi test run
+      const data = getTestDataSimple('loginCases', key);
 
       console.log(`▶️ Running Negative Case: ${key}`);
 
@@ -96,9 +97,8 @@ test.describe('Login - Negative Cases', { tag: '@regression' }, () => {
       await page.getByRole('button', { name: 'Login' }).click();
 
       // --- LOGIC CHECK LỖI ---
-      // Dùng (testData as any) để truy cập các trường đặc thù của negative case
-      const validationType = (data as any).validationType;
-      const expectedError = (data as any).expectedError;
+      const validationType = data.validationType;
+      const expectedError = data.expectedError;
 
       if (validationType === 'browser') {
         // Case 1: Browser Validation (HTML5 Bubble)

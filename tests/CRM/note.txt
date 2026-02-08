@@ -1003,5 +1003,9 @@ select.first()
 
 select.nth(1)
 
+///
 page.locator('div').filer({hasText: 'Lọc trạng thái'}).locator('select')
+
 page.getByText('Lọc trạng thái).locator('xpath=following-sibling::select')
+
+FE sẽ render ra 1 cái skeleton 
