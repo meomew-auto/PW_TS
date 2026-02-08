@@ -45,7 +45,10 @@ function cloneData<T>(data: T): T {
 // MAIN FUNCTION - getTestDataSimple()
 // ============================================================
 
-export function getTestDataSimple<N extends TestDataNamespace, K extends keyof DataSchemas[N]>(
+export function getTestDataSimple<
+  N extends TestDataNamespace,
+  K extends keyof (typeof testDataCatalog)[N],
+>(
   namespace: N,
   key: K,
   options?: {
