@@ -61,7 +61,7 @@ export function isStorageStateValid(filePath: string): boolean {
     const nekoAuthString = nekoAuthItem.value;
 
     const nekoAuth = JSON.parse(nekoAuthString);
-    const expireAt = nekoAuth.state.expireAt;
+    const expireAt = nekoAuth.state.expiresAt;
 
     if (!expireAt) return false;
 

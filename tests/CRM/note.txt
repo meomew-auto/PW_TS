@@ -1009,3 +1009,15 @@ page.locator('div').filer({hasText: 'Lọc trạng thái'}).locator('select')
 page.getByText('Lọc trạng thái).locator('xpath=following-sibling::select')
 
 FE sẽ render ra 1 cái skeleton 
+
+Bản chất cloudflare, google recaptcha -> sẽ là FE hiển thị challenge ... (câu đố) -> bên thứ 3 là cloudflare, hoặc google sẽ đánh giá xem bạn có là người thật hay ko
+-> pass -> goi xuống BE . Be -> gọi server của cloudflare, hoặc google để check xem là cái hành vi nà có đc phép là con người hay ko =>
+nó sẽ cho phép người dùng dăng nhập 
+
+những cách bypass
+=> luôn sử dụng site key hay secret key LUÔN PASS ->  nhờ dev (auto test ko can thiệp đc)'
+=> tắt 
+=> là mình sẽ đăng nhập bằng người dùng thật (thao tác manual) => copy state -> tạo thành file json. giốn với luồng storageState =>
+
+Chúng ta sẽ dùng 1 cái trick
+nghĩa là ta sẽ khởi đọng browser qua CDP (và sử dụng playwright kết nối với trình duyệt qua CDP debugger)

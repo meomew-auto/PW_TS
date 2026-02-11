@@ -17,15 +17,19 @@ setup('Authentication Neko APi', async ({ request }) => {
   //file danh cho UI
   const adminStoragePath = getStorageStatePath('admin');
 
-  if (isStorageStateValid(adminStoragePath)) {
+  if (
+    tokenData?.token &&
+    isTokenValidByJWT(tokenData.token) &&
+    isStorageStateValid(adminStoragePath)
+  ) {
     console.log(`Token còn hạn, skip login`);
     return;
   }
-  // console.log('Login in admin');
-  // const result = await loginAndSaveStorageState(request, 'admin');
-  // expect(result.accessToken).toBeTruthy();
+  console.log('Login in admin');
+  const result = await loginAndSaveStorageState(request, 'admin');
+  expect(result.accessToken).toBeTruthy();
 
-  // saveTokenFile(result.accessToken, result.refreshToken, result.expiresAt);
+  saveTokenFile(result.accessToken, result.refreshToken, result.expiresAt);
 });
 
 //logic

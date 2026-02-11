@@ -19,26 +19,26 @@ export default defineConfig({
   workers: process.env.CI ? 1 : 2,
   reporter: [
     // ['allure-playwright'],
-    ['./custom.ts'],
+    // ['./custom.ts'],
     // [
     //   'json',
     //   {
     //     outputFile: './data.json',
     //   },
     // ],
-    // [
-    //   'list',
-    //   {
-    //     printSteps: true,
-    //   },
-    // ],
+    [
+      'list',
+      {
+        printSteps: true,
+      },
+    ],
     ['html'],
   ],
 
   use: {
     baseURL: 'https://crm.anhtester.com',
     trace: 'on',
-    headless: true,
+    headless: false,
     video: 'on-first-retry',
     screenshot: 'only-on-failure',
   },
@@ -118,14 +118,15 @@ export default defineConfig({
       dependencies: ['neko-setup'],
       use: {
         ...devices['Desktop Chrome'],
-        baseURL: process.env.BASE_URL || 'https://coffee.autoneko.com',
+        baseURL: 'https://coffee.autoneko.com',
         storageState: './auth/admin.json',
         viewport: { width: 1280, height: 720 },
       },
     },
   ],
 });
-
+// api-ui-combo.spec.ts
+// demo-scroll.spec.ts
 // type DeviceDescriptor = {
 //   viewport: ViewportSize;
 //   userAgent: string;
